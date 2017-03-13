@@ -42,11 +42,11 @@ func NewContext(path string) (*Context, error) {
 				Summary: "Execute docker-compose",
 			},
 			"help": {
-				Command: "help",
+				Command: ".help",
 				Summary: "Show this",
 			},
 			"config": {
-				Command: "config",
+				Command: ".config",
 				Summary: "Debug context and configuration",
 			},
 		},

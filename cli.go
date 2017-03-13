@@ -41,9 +41,9 @@ func (c *CLI) Run() error {
 	c.substituteCommand()
 
 	switch c.Args[0] {
-	case "help":
+	case ".help":
 		return c.ExecHelp()
-	case "config":
+	case ".config":
 		return c.ExecConfig()
 	}
 
@@ -61,7 +61,7 @@ func (c *CLI) setup() {
 
 func (c *CLI) substituteCommand() {
 	if len(c.Args) == 0 {
-		c.Args = []string{"help"}
+		c.Args = []string{".help"}
 		return
 	}
 
