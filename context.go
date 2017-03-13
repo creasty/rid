@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -14,6 +15,7 @@ import (
 
 const (
 	configFileName = "dev/devc.yml"
+	libexecDirName = "libexec"
 )
 
 type Context struct {
@@ -57,11 +59,11 @@ func (c *Context) findConfigFile(path string) error {
 		path = filepath.Dir(path)
 	}
 
-	return errors.New("Unable to find a config file: dev/devc.yml")
+	return fmt.Errorf("Unable to locate a config file: %s", configFileName)
 }
 
 func (c *Context) findExecutables() error {
-	files, err := filepath.Glob(filepath.Join(c.BaseDir, "libexec", "*"))
+	files, err := filepath.Glob(filepath.Join(c.BaseDir, libexecDirName, "*"))
 	if err != nil {
 		return err
 	}
