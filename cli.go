@@ -47,6 +47,11 @@ func (c *CLI) Run() error {
 		if err := c.exec("docker-compose", "up", "-d"); err != nil {
 			return err
 		}
+		args := append([]string{
+			"exec",
+			c.Config.MainService,
+		}, c.Args...)
+		return c.exec("docker-compose", args...)
 	}
 
 	return c.exec(c.Args[0], c.Args[1:]...)
