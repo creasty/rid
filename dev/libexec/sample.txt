@@ -1,0 +1,4 @@
+Prints a greeting message
+
+Usage:
+    devc sample NAME

@@ -1,4 +1,4 @@
 Prints system info
 
 Usage:
-    sample2 NAME
+    devc sample2
