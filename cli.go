@@ -28,11 +28,7 @@ func (c *CLI) Run() error {
 
 	c.SubstituteCommand()
 
-	cmd := exec.Command(c.Args[0], c.Args[1:]...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	return c.run()
 }
 
 func (c *CLI) setup() {
@@ -63,4 +59,12 @@ func (c *CLI) SubstituteCommand() {
 			c.Args[0] = cmd
 		}
 	}
+}
+
+func (c *CLI) run() error {
+	cmd := exec.Command(c.Args[0], c.Args[1:]...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
