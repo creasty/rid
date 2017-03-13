@@ -12,11 +12,11 @@ import (
 const helpTemplate = `Execute commands via docker-compose
 
 Usage:
-	devc [command]
+    devc [command]
 
 Commands:
 {{- range $name, $sub := .Substitution }}
-	{{ printf $.NameFormat $name }}{{ if ne $sub.Summary "" }} # {{ $sub.Summary }}{{ end }}
+    {{ printf $.NameFormat $name }}{{ if ne $sub.Summary "" }} # {{ $sub.Summary }}{{ end }}
 {{- end }}
 `
 
