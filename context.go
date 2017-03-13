@@ -28,14 +28,14 @@ type Substitution struct {
 type Context struct {
 	BaseDir      string
 	ConfigFile   string
-	Substitution map[string]Substitution
+	Substitution map[string]*Substitution
 	Config       Config
 	IP           string
 }
 
 func NewContext(path string) (*Context, error) {
 	c := &Context{
-		Substitution: map[string]Substitution{
+		Substitution: map[string]*Substitution{
 			"compose": {
 				Command: "docker-compose",
 				Summary: "Execute docker-compose",
@@ -84,7 +84,7 @@ func (c *Context) findSubstitutions() error {
 		basename := filepath.Base(f)
 
 		if s, err := os.Stat(f); err == nil && (s.Mode()&0111) != 0 {
-			c.Substitution[basename] = Substitution{
+			c.Substitution[basename] = &Substitution{
 				Command:   f,
 				AutoStart: false, // TODO
 			}
@@ -97,7 +97,7 @@ func (c *Context) findSubstitutions() error {
 	}
 
 	for name, file := range help {
-		if e, ok := c.Substitution[name]; !ok {
+		if e, ok := c.Substitution[name]; ok {
 			e.HelpFile = file
 		}
 	}
