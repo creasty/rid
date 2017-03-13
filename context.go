@@ -90,13 +90,13 @@ func (c *Context) findSubstitutions() error {
 		basename := filepath.Base(f)
 
 		if s, err := os.Stat(f); err == nil && (s.Mode()&0111) != 0 {
-			name, runInContainer := removeWrapperPrefix(basename)
-			if runInContainer {
+			name, wrapper := removeWrapperPrefix(basename)
+			if !wrapper {
 				f, _ = filepath.Rel(c.RootDir, f)
 			}
 			c.Substitution[name] = &Substitution{
 				Command:        f,
-				RunInContainer: runInContainer,
+				RunInContainer: !wrapper,
 			}
 			continue
 		}
