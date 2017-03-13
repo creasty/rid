@@ -114,7 +114,9 @@ func (c *CLI) ExecHelp() error {
 	}
 
 	for _, s := range c.Substitution {
-		s.Summary, s.Description = loadHelpFile(s.HelpFile)
+		if summary, _ := loadHelpFile(s.HelpFile); summary != "" {
+			s.Summary = summary
+		}
 	}
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
