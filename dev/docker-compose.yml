@@ -3,7 +3,7 @@ version: '2.1'
 services:
   app:
     container_name: creasty-devc-app
-    image: creasty/devc-dev:latest
+    image: creasty/devc:dev
     build: .
     volumes:
       - ..:/go/src/github.com/creasty/devc
