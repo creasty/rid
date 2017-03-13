@@ -37,20 +37,19 @@ func NewCLI(ctx *Context, args []string) *CLI {
 
 func (c *CLI) Run() error {
 	c.setup()
+	c.substituteCommand()
 
 	if ok, err := c.ExecHelp(); ok || err != nil {
 		return err
 	}
 
-	c.substituteCommand()
-
 	if c.RunInContainer {
-		if err := c.start(); err != nil {
+		if err := c.exec("docker-compose", "up", "-d"); err != nil {
 			return err
 		}
 	}
 
-	return c.run()
+	return c.exec(c.Args[0], c.Args[1:]...)
 }
 
 func (c *CLI) setup() {
@@ -62,6 +61,11 @@ func (c *CLI) setup() {
 }
 
 func (c *CLI) substituteCommand() {
+	if len(c.Args) == 0 {
+		c.Args = []string{"help"}
+		return
+	}
+
 	if s, ok := c.Substitution[c.Args[0]]; ok {
 		c.Args[0] = s.Command
 		c.RunInContainer = s.RunInContainer
@@ -77,16 +81,8 @@ func (c *CLI) exec(name string, args ...string) error {
 	return cmd.Run()
 }
 
-func (c *CLI) run() error {
-	return c.exec(c.Args[0], c.Args[1:]...)
-}
-
-func (c *CLI) start() error {
-	return c.exec("docker-compose", "up", "-d")
-}
-
 func (c *CLI) ExecHelp() (bool, error) {
-	if len(c.Args) > 0 && c.Args[0] != "help" {
+	if c.Args[0] != "help" {
 		return false, nil
 	}
 
