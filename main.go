@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -16,7 +17,8 @@ func main() {
 	}
 
 	cli := NewCLI(c, os.Args)
-	if cli.Run() != nil {
+	if err := cli.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }

@@ -22,6 +22,10 @@ func NewCLI(ctx *Context, args []string) *CLI {
 func (c *CLI) Run() error {
 	c.setup()
 
+	if ok, err := c.showHelp(); ok || err != nil {
+		return err
+	}
+
 	// cmd := exec.Command("docker-compose", "-h")
 	cmd := exec.Command(c.Args[0], c.Args[1:]...)
 	cmd.Stdin = os.Stdin
@@ -38,4 +42,13 @@ func (c *CLI) setup() {
 
 	pp.Println(c.Context)
 	pp.Println(c.Args)
+}
+
+func (c *CLI) showHelp() (bool, error) {
+	if len(c.Args) > 0 && c.Args[0] != "help" {
+		return false, nil
+	}
+
+	println("help")
+	return true, nil
 }
