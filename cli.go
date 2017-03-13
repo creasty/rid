@@ -23,15 +23,15 @@ Commands:
 
 type CLI struct {
 	*Context
-	Args      []string
-	AutoStart bool
+	Args           []string
+	RunInContainer bool
 }
 
 func NewCLI(ctx *Context, args []string) *CLI {
 	return &CLI{
-		Context:   ctx,
-		Args:      args[1:],
-		AutoStart: true,
+		Context:        ctx,
+		Args:           args[1:],
+		RunInContainer: true,
 	}
 }
 
@@ -44,7 +44,7 @@ func (c *CLI) Run() error {
 
 	c.substituteCommand()
 
-	if c.AutoStart {
+	if c.RunInContainer {
 		if err := c.start(); err != nil {
 			return err
 		}
@@ -64,7 +64,7 @@ func (c *CLI) setup() {
 func (c *CLI) substituteCommand() {
 	if s, ok := c.Substitution[c.Args[0]]; ok {
 		c.Args[0] = s.Command
-		c.AutoStart = s.AutoStart
+		c.RunInContainer = s.RunInContainer
 	}
 }
 

@@ -18,11 +18,11 @@ const (
 )
 
 type Substitution struct {
-	Command     string
-	Summary     string
-	Description string
-	AutoStart   bool
-	HelpFile    string
+	Command        string
+	Summary        string
+	Description    string
+	RunInContainer bool
+	HelpFile       string
 }
 
 type Context struct {
@@ -85,8 +85,8 @@ func (c *Context) findSubstitutions() error {
 
 		if s, err := os.Stat(f); err == nil && (s.Mode()&0111) != 0 {
 			c.Substitution[basename] = &Substitution{
-				Command:   f,
-				AutoStart: false, // TODO
+				Command:        f,
+				RunInContainer: false, // TODO
 			}
 			continue
 		}
