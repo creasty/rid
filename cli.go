@@ -26,7 +26,7 @@ func (c *CLI) Run() error {
 		return err
 	}
 
-	c.SubstituteCommand()
+	c.substituteCommand()
 
 	return c.run()
 }
@@ -39,16 +39,7 @@ func (c *CLI) setup() {
 	pp.Println(c.Args)
 }
 
-func (c *CLI) ExecHelp() (bool, error) {
-	if len(c.Args) > 0 && c.Args[0] != "help" {
-		return false, nil
-	}
-
-	println("help")
-	return true, nil
-}
-
-func (c *CLI) SubstituteCommand() {
+func (c *CLI) substituteCommand() {
 	switch c.Args[0] {
 	case "compose":
 		c.Args[0] = "docker-compose"
@@ -66,4 +57,13 @@ func (c *CLI) run() error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
+}
+
+func (c *CLI) ExecHelp() (bool, error) {
+	if len(c.Args) > 0 && c.Args[0] != "help" {
+		return false, nil
+	}
+
+	println("help")
+	return true, nil
 }
