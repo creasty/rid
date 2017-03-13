@@ -17,19 +17,30 @@ const (
 	libexecDirName = "libexec"
 )
 
+type Substitution struct {
+	Command     string
+	Summary     string
+	Description string
+	AutoStart   bool
+	HelpFile    string
+}
+
 type Context struct {
-	BaseDir    string
-	ConfigFile string
-	Executable map[string]string
-	Help       map[string]string
-	Config     Config
-	IP         string
+	BaseDir      string
+	ConfigFile   string
+	Substitution map[string]Substitution
+	Config       Config
+	IP           string
 }
 
 func NewContext(path string) (*Context, error) {
 	c := &Context{
-		Executable: make(map[string]string),
-		Help:       make(map[string]string),
+		Substitution: map[string]Substitution{
+			"compose": {
+				Command: "docker-compose",
+				Summary: "Execute docker-compose",
+			},
+		},
 	}
 	if err := c.findConfigFile(path); err != nil {
 		return nil, err
@@ -40,7 +51,7 @@ func NewContext(path string) (*Context, error) {
 	if err := c.getLocalIP(); err != nil {
 		return nil, err
 	}
-	if err := c.findExecutables(); err != nil {
+	if err := c.findSubstitutions(); err != nil {
 		return nil, err
 	}
 	return c, nil
@@ -61,28 +72,33 @@ func (c *Context) findConfigFile(path string) error {
 	return fmt.Errorf("Unable to locate a config file: %s", configFileName)
 }
 
-func (c *Context) findExecutables() error {
+func (c *Context) findSubstitutions() error {
 	files, err := filepath.Glob(filepath.Join(c.BaseDir, libexecDirName, "*"))
 	if err != nil {
 		return err
 	}
 
+	help := make(map[string]string)
+
 	for _, f := range files {
 		basename := filepath.Base(f)
 
 		if s, err := os.Stat(f); err == nil && (s.Mode()&0111) != 0 {
-			c.Executable[basename] = f
+			c.Substitution[basename] = Substitution{
+				Command:   f,
+				AutoStart: false, // TODO
+			}
 			continue
 		}
 
 		if strings.HasSuffix(f, ".txt") {
-			c.Help[strings.TrimSuffix(basename, ".txt")] = f
+			help[strings.TrimSuffix(basename, ".txt")] = f
 		}
 	}
 
-	for k := range c.Help {
-		if _, ok := c.Executable[k]; !ok {
-			delete(c.Help, k)
+	for name, file := range help {
+		if e, ok := c.Substitution[name]; !ok {
+			e.HelpFile = file
 		}
 	}
 
@@ -90,12 +106,12 @@ func (c *Context) findExecutables() error {
 }
 
 func (c *Context) loadConfig() error {
-	file, err := os.Open(c.ConfigFile)
+	f, err := os.Open(c.ConfigFile)
 	if err != nil {
 		return nil
 	}
 
-	b, err := ioutil.ReadAll(file)
+	b, err := ioutil.ReadAll(f)
 	if err != nil {
 		return err
 	}

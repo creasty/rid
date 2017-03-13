@@ -48,15 +48,9 @@ func (c *CLI) setup() {
 }
 
 func (c *CLI) substituteCommand() {
-	switch c.Args[0] {
-	case "compose":
-		c.Args[0] = "docker-compose"
-		c.AutoStart = false
-	default:
-		if cmd, ok := c.Executable[c.Args[0]]; ok {
-			c.Args[0] = cmd
-			c.AutoStart = false
-		}
+	if s, ok := c.Substitution[c.Args[0]]; ok {
+		c.Args[0] = s.Command
+		c.AutoStart = s.AutoStart
 	}
 }
 
