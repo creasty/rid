@@ -32,8 +32,6 @@ func (c *CLI) Run() error {
 }
 
 func (c *CLI) setup() {
-	os.Chdir(c.BaseDir)
-
 	os.Setenv("COMPOSE_PROJECT_NAME", c.Config.ProjectName)
 	os.Setenv("DOCKER_HOST_IP", c.IP)
 
@@ -63,6 +61,7 @@ func (c *CLI) SubstituteCommand() {
 
 func (c *CLI) run() error {
 	cmd := exec.Command(c.Args[0], c.Args[1:]...)
+	cmd.Dir = c.BaseDir
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
