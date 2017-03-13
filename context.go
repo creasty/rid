@@ -26,6 +26,7 @@ type Substitution struct {
 }
 
 type Context struct {
+	RootDir      string
 	BaseDir      string
 	ConfigFile   string
 	Substitution map[string]*Substitution
@@ -67,6 +68,7 @@ func (c *Context) findConfigFile(path string) error {
 		if _, err := os.Stat(configFile); err == nil {
 			c.ConfigFile = configFile
 			c.BaseDir = filepath.Dir(configFile)
+			c.RootDir = filepath.Dir(c.BaseDir)
 			return nil
 		}
 
@@ -88,9 +90,13 @@ func (c *Context) findSubstitutions() error {
 		basename := filepath.Base(f)
 
 		if s, err := os.Stat(f); err == nil && (s.Mode()&0111) != 0 {
-			c.Substitution[basename] = &Substitution{
+			name, runInContainer := removeWrapperPrefix(basename)
+			if runInContainer {
+				f, _ = filepath.Rel(c.RootDir, f)
+			}
+			c.Substitution[name] = &Substitution{
 				Command:        f,
-				RunInContainer: false, // TODO
+				RunInContainer: runInContainer,
 			}
 			continue
 		}
@@ -101,6 +107,7 @@ func (c *Context) findSubstitutions() error {
 	}
 
 	for name, file := range help {
+		name, _ = removeWrapperPrefix(name)
 		if e, ok := c.Substitution[name]; ok {
 			e.HelpFile = file
 		}

@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+const (
+	WrapperPrefix = "devc-"
+)
+
 func getLocalIP() string {
 	for _, i := range []string{"en0", "en1", "en2"} {
 		cmd := exec.Command("ipconfig", "getifaddr", i)
@@ -19,4 +23,9 @@ func getLocalIP() string {
 	}
 
 	return ""
+}
+
+func removeWrapperPrefix(str string) (string, bool) {
+	had := strings.HasPrefix(str, WrapperPrefix)
+	return strings.TrimPrefix(str, WrapperPrefix), had
 }

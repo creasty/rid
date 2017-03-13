@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o pipefail
+
+echo "$(uname -s)"
+echo "$(uname -m)"
