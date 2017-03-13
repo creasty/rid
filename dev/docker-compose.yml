@@ -1,0 +1,21 @@
+version: '2.1'
+
+services:
+  app:
+    container_name: creasty-devc-app
+    image: creasty/devc-dev:latest
+    build: .
+    volumes:
+      - ..:/go/src/github.com/creasty/devc
+    volumes_from:
+      - volume
+    extra_hosts:
+      localhost: "${DOCKER_HOST_IP}"
+    command: tail -f /dev/null
+
+  volume:
+    container_name: creasty-devc-volume
+    image: alpine:latest
+    volumes:
+      - /go/src/github.com/creasty/devc/vendor
+    command: tail -f /dev/null

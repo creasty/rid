@@ -1,0 +1,30 @@
+FROM golang:1.7.5-alpine
+
+
+#  Glide
+#-----------------------------------------------
+ENV GLIDE_VERSION 0.11.1
+
+RUN apk add --no-cache -U --virtual .build-deps \
+    curl \
+  && curl -fL "https://github.com/Masterminds/glide/releases/download/v$GLIDE_VERSION/glide-v$GLIDE_VERSION-linux-amd64.zip" -o glide.zip \
+  && unzip glide.zip \
+  && mv ./linux-amd64/glide /usr/local/bin/glide \
+  && rm -fr ./linux-amd64 \
+  && rm ./glide.zip \
+  && apk del .build-deps \
+  \
+  && apk add --no-cache -U --virtual .glide-deps \
+    git
+
+
+#  Library
+#-----------------------------------------------
+RUN apk add --no-cache -U \
+    bash \
+    coreutils
+
+
+#  App
+#-----------------------------------------------
+WORKDIR /go/src/github.com/creasty/devc
