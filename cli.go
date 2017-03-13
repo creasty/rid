@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -17,7 +18,7 @@ Usage:
 
 Commands:
 {{- range $name, $sub := .Substitution }}
-	{{ printf "%-10s" $name }}{{ if ne $sub.Summary "" }} # {{ $sub.Summary }}{{ end }}
+	{{ printf $.NameFormat $name }}{{ if ne $sub.Summary "" }} # {{ $sub.Summary }}{{ end }}
 {{- end }}
 `
 
@@ -91,6 +92,13 @@ func (c *CLI) ExecHelp() (bool, error) {
 		return false, nil
 	}
 
+	maxNameLen := 0
+	for name := range c.Substitution {
+		if l := len(name); l > maxNameLen {
+			maxNameLen = l
+		}
+	}
+
 	for _, s := range c.Substitution {
 		if s.HelpFile == "" {
 			continue
@@ -110,6 +118,9 @@ func (c *CLI) ExecHelp() (bool, error) {
 		s.Summary = strings.SplitN(s.Description, "\n", 2)[0] // FIXME: consider other newline chars
 	}
 
-	tmpl := template.Must(template.New("name").Parse(helpTemplate))
-	return true, tmpl.Execute(os.Stderr, c)
+	tmpl := template.Must(template.New("help").Parse(helpTemplate))
+	return true, tmpl.Execute(os.Stderr, map[string]interface{}{
+		"Substitution": c.Substitution,
+		"NameFormat":   fmt.Sprintf("%%-%ds", maxNameLen+1),
+	})
 }
