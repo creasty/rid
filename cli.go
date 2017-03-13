@@ -40,19 +40,15 @@ func (c *CLI) Run() error {
 	c.setup()
 	c.substituteCommand()
 
-	if ok, err := c.ExecHelp(); ok || err != nil {
-		return err
+	switch c.Args[0] {
+	case "help":
+		return c.ExecHelp()
+	case "config":
+		return c.ExecConfig()
 	}
 
 	if c.RunInContainer {
-		if err := c.exec("docker-compose", "up", "-d"); err != nil {
-			return err
-		}
-		args := append([]string{
-			"exec",
-			c.Config.MainService,
-		}, c.Args...)
-		return c.exec("docker-compose", args...)
+		return c.run()
 	}
 
 	return c.exec(c.Args[0], c.Args[1:]...)
@@ -61,9 +57,6 @@ func (c *CLI) Run() error {
 func (c *CLI) setup() {
 	os.Setenv("COMPOSE_PROJECT_NAME", c.Config.ProjectName)
 	os.Setenv("DOCKER_HOST_IP", c.IP)
-
-	pp.Println(c.Context)
-	pp.Println(c.Args)
 }
 
 func (c *CLI) substituteCommand() {
@@ -87,11 +80,20 @@ func (c *CLI) exec(name string, args ...string) error {
 	return cmd.Run()
 }
 
-func (c *CLI) ExecHelp() (bool, error) {
-	if c.Args[0] != "help" {
-		return false, nil
+func (c *CLI) run() error {
+	if err := c.exec("docker-compose", "up", "-d"); err != nil {
+		return err
 	}
 
+	args := append([]string{
+		"exec",
+		c.Config.MainService,
+	}, c.Args...)
+
+	return c.exec("docker-compose", args...)
+}
+
+func (c *CLI) ExecHelp() error {
 	maxNameLen := 0
 	for name := range c.Substitution {
 		if l := len(name); l > maxNameLen {
@@ -119,8 +121,13 @@ func (c *CLI) ExecHelp() (bool, error) {
 	}
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
-	return true, tmpl.Execute(os.Stderr, map[string]interface{}{
+	return tmpl.Execute(os.Stderr, map[string]interface{}{
 		"Substitution": c.Substitution,
 		"NameFormat":   fmt.Sprintf("%%-%ds", maxNameLen+1),
 	})
+}
+
+func (c *CLI) ExecConfig() error {
+	pp.Println(c.Context)
+	return nil
 }

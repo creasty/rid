@@ -45,6 +45,10 @@ func NewContext(path string) (*Context, error) {
 				Command: "help",
 				Summary: "Show this",
 			},
+			"config": {
+				Command: "config",
+				Summary: "Debug context and configuration",
+			},
 		},
 	}
 	if err := c.findConfigFile(path); err != nil {
