@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -120,18 +119,10 @@ func (c *Context) loadConfig() error {
 }
 
 func (c *Context) getLocalIP() error {
-	for _, i := range []string{"en0", "en1", "en2"} {
-		cmd := exec.Command("ipconfig", "getifaddr", i)
-		b, err := cmd.Output()
-		if err != nil {
-			continue
-		}
-
-		if len(b) > 0 {
-			c.IP = strings.Trim(string(b[:]), "\n")
-			return nil
-		}
+	c.IP = getLocalIP()
+	if c.IP == "" {
+		return errors.New("Failed to get a local IP address")
 	}
 
-	return errors.New("Failed to get a local IP address")
+	return nil
 }
