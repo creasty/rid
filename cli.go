@@ -8,8 +8,8 @@ import (
 )
 
 type CLI struct {
-	Context *Context
-	Args    []string
+	*Context
+	Args []string
 }
 
 func NewCLI(ctx *Context, args []string) *CLI {
@@ -22,11 +22,12 @@ func NewCLI(ctx *Context, args []string) *CLI {
 func (c *CLI) Run() error {
 	c.setup()
 
-	if ok, err := c.showHelp(); ok || err != nil {
+	if ok, err := c.ExecHelp(); ok || err != nil {
 		return err
 	}
 
-	// cmd := exec.Command("docker-compose", "-h")
+	c.SubstituteCommand()
+
 	cmd := exec.Command(c.Args[0], c.Args[1:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -35,20 +36,31 @@ func (c *CLI) Run() error {
 }
 
 func (c *CLI) setup() {
-	os.Chdir(c.Context.BaseDir)
+	os.Chdir(c.BaseDir)
 
-	os.Setenv("COMPOSE_PROJECT_NAME", c.Context.Config.ProjectName)
-	os.Setenv("DOCKER_HOST_IP", c.Context.IP)
+	os.Setenv("COMPOSE_PROJECT_NAME", c.Config.ProjectName)
+	os.Setenv("DOCKER_HOST_IP", c.IP)
 
 	pp.Println(c.Context)
 	pp.Println(c.Args)
 }
 
-func (c *CLI) showHelp() (bool, error) {
+func (c *CLI) ExecHelp() (bool, error) {
 	if len(c.Args) > 0 && c.Args[0] != "help" {
 		return false, nil
 	}
 
 	println("help")
 	return true, nil
+}
+
+func (c *CLI) SubstituteCommand() {
+	switch c.Args[0] {
+	case "compose":
+		c.Args[0] = "docker-compose"
+	default:
+		if cmd, ok := c.Executable[c.Args[0]]; ok {
+			c.Args[0] = cmd
+		}
+	}
 }
