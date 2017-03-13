@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
-	"strings"
 	"text/template"
 
 	"github.com/k0kubun/pp"
@@ -41,10 +39,12 @@ func (c *CLI) Run() error {
 	c.substituteCommand()
 
 	switch c.Args[0] {
-	case ".help":
-		return c.ExecHelp()
 	case ".config":
 		return c.ExecConfig()
+	case ".sub-help":
+		return c.ExecSubHelp()
+	case ".help":
+		return c.ExecHelp()
 	}
 
 	if c.RunInContainer {
@@ -68,6 +68,13 @@ func (c *CLI) substituteCommand() {
 	if s, ok := c.Substitution[c.Args[0]]; ok {
 		c.Args[0] = s.Command
 		c.RunInContainer = s.RunInContainer
+
+		if s.HelpFile != "" && len(c.Args) > 1 {
+			switch c.Args[1] {
+			case "-h", "--help":
+				c.Args = []string{".sub-help", s.HelpFile}
+			}
+		}
 	}
 }
 
@@ -93,6 +100,11 @@ func (c *CLI) run() error {
 	return c.exec("docker-compose", args...)
 }
 
+func (c *CLI) ExecConfig() error {
+	pp.Println(c.Context)
+	return nil
+}
+
 func (c *CLI) ExecHelp() error {
 	maxNameLen := 0
 	for name := range c.Substitution {
@@ -102,22 +114,7 @@ func (c *CLI) ExecHelp() error {
 	}
 
 	for _, s := range c.Substitution {
-		if s.HelpFile == "" {
-			continue
-		}
-
-		f, err := os.Open(s.HelpFile)
-		if err != nil {
-			continue
-		}
-
-		b, err := ioutil.ReadAll(f)
-		if err != nil {
-			continue
-		}
-
-		s.Description = string(b[:])
-		s.Summary = strings.SplitN(s.Description, "\n", 2)[0] // FIXME: consider other newline chars
+		s.Summary, s.Description = loadHelpFile(s.HelpFile)
 	}
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
@@ -127,7 +124,8 @@ func (c *CLI) ExecHelp() error {
 	})
 }
 
-func (c *CLI) ExecConfig() error {
-	pp.Println(c.Context)
+func (c *CLI) ExecSubHelp() error {
+	_, description := loadHelpFile(c.Args[1])
+	fmt.Fprintln(os.Stderr, description)
 	return nil
 }

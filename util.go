@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -28,4 +30,24 @@ func getLocalIP() string {
 func removeWrapperPrefix(str string) (string, bool) {
 	had := strings.HasPrefix(str, WrapperPrefix)
 	return strings.TrimPrefix(str, WrapperPrefix), had
+}
+
+func loadHelpFile(file string) (summary, description string) {
+	if file == "" {
+		return
+	}
+
+	f, err := os.Open(file)
+	if err != nil {
+		return
+	}
+
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		return
+	}
+
+	description = string(b[:])
+	summary = strings.SplitN(description, "\n", 2)[0] // FIXME: consider other newline chars
+	return
 }
