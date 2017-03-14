@@ -94,7 +94,11 @@ func (c *CLI) substituteCommand() {
 
 func (c *CLI) exec(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
-	cmd.Dir = c.BaseDir
+	if name == "docker-compose" {
+		cmd.Dir = c.BaseDir
+	} else {
+		cmd.Dir = c.RootDir
+	}
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
