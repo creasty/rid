@@ -7,7 +7,7 @@ VERSION  := 0.0.1
 REVISION := $(shell git rev-parse --short HEAD)
 
 GO_BUILD_FLAGS := -v -ldflags="-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\" -extldflags \"-static\""
-GO_TEST_FLAGS  := -v -race
+GO_TEST_FLAGS  := -v -coverprofile=coverage.txt -covermode=atomic
 
 PACKAGE_DIRS := $(shell go list ./... 2> /dev/null | grep -v /vendor/)
 SRC_FILES    := $(shell find . -name '*.go' -not -path './vendor/*')
