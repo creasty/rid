@@ -142,6 +142,6 @@ func (c *CLI) ExecHelp() error {
 
 func (c *CLI) ExecSubHelp() error {
 	_, description := loadHelpFile(c.Args[1])
-	fmt.Fprintln(os.Stderr, description)
+	fmt.Fprint(os.Stderr, description)
 	return nil
 }
