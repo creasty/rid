@@ -6,7 +6,7 @@ NAME     := dor
 VERSION  := 0.0.1
 REVISION := $(shell git rev-parse --short HEAD)
 
-GO_BUILD_FLAGS := -v -ldflags="-s -w -X \"github.com/creasty/dor.Version=$(VERSION)\" -X \"github.com/creasty/dor.Revision=$(REVISION)\" -extldflags \"-static\""
+GO_BUILD_FLAGS := -v -ldflags="-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\" -extldflags \"-static\""
 GO_TEST_FLAGS  := -v -race
 
 PACKAGE_DIRS := $(shell go list ./... 2> /dev/null | grep -v /vendor/)
@@ -19,7 +19,7 @@ SRC_FILES    := $(shell find . -name '*.go' -not -path './vendor/*')
 build:
 	@for os in darwin linux windows; do \
 		for arch in amd64 386; do \
-			echo "Build $$os $$arch"; \
+			echo "==> Build $$os $$arch"; \
 			GOOS=$$os GOARCH=$$arch go build $(GO_BUILD_FLAGS) \
 				-o dist/$$os-$$arch/$(NAME); \
 		done; \
