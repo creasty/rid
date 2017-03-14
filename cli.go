@@ -14,7 +14,12 @@ const helpTemplate = `Execute commands via docker-compose
 Usage:
     devc COMMAND [args...]
     devc COMMAND -h|--help
-    devc -h|--help
+    devc [options]
+
+Options:
+    -h, --help     Show this
+    -v, --version  Show devc version
+        --debug    Debug context and configuration
 
 Commands:
 {{- range $name, $sub := .Substitution }}
@@ -41,10 +46,12 @@ func (c *CLI) Run() error {
 	c.substituteCommand()
 
 	switch c.Args[0] {
-	case "--debug":
-		return c.ExecDebug()
 	case "-h", "--help", ".help":
 		return c.ExecHelp()
+	case "-v", "--version":
+		return c.ExecVersion()
+	case "--debug":
+		return c.ExecDebug()
 	case ".sub-help":
 		return c.ExecSubHelp()
 	}
@@ -100,6 +107,11 @@ func (c *CLI) run() error {
 	}, c.Args...)
 
 	return c.exec("docker-compose", args...)
+}
+
+func (c *CLI) ExecVersion() error {
+	fmt.Println("0.0.1") // TODO: Inject on build
+	return nil
 }
 
 func (c *CLI) ExecDebug() error {
