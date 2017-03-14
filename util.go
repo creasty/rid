@@ -38,10 +38,6 @@ func removeWrapperPrefix(str string) (string, bool) {
 }
 
 func loadHelpFile(file string) (summary, description string) {
-	if file == "" {
-		return
-	}
-
 	f, err := os.Open(file)
 	if err != nil {
 		return
