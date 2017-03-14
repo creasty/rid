@@ -112,7 +112,7 @@ func (c *CLI) run() error {
 }
 
 func (c *CLI) ExecVersion() error {
-	fmt.Println("0.0.1") // TODO: Inject on build
+	fmt.Printf("%s (revision %s)", Version, Revision)
 	return nil
 }
 
