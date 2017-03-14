@@ -8,17 +8,20 @@ import (
 	"github.com/ghodss/yaml"
 )
 
+// Default config values
 const (
 	DefaultMainService   = "app"
 	DefaultVolumeService = "volume"
 )
 
+// Config is a configuration object which parameters are loaded from yaml file
 type Config struct {
 	ProjectName string `json:"project_name" valid:"required"`
 	MainService string `json:"main_service"`
 	DataService string `json:"data_service"`
 }
 
+// NewConfig creates a new Config instance from a file and validates its parameters
 func NewConfig(file string) (*Config, error) {
 	c := &Config{}
 

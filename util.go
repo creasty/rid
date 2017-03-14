@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-const (
-	WrapperPrefix = "dor-"
-)
-
 var (
 	newlinePattern = regexp.MustCompile("\r\n|\r|\n")
 )
@@ -33,8 +29,9 @@ func getLocalIP() string {
 }
 
 func removeWrapperPrefix(str string) (string, bool) {
-	had := strings.HasPrefix(str, WrapperPrefix)
-	return strings.TrimPrefix(str, WrapperPrefix), had
+	const prefix = "dor-"
+	had := strings.HasPrefix(str, prefix)
+	return strings.TrimPrefix(str, prefix), had
 }
 
 func loadHelpFile(file string) (summary, description string) {

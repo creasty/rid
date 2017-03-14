@@ -27,6 +27,7 @@ Commands:
 {{- end }}
 `
 
+// CLI is an object holding states of the dor command
 type CLI struct {
 	*Context
 	Config         *Config
@@ -34,6 +35,7 @@ type CLI struct {
 	RunInContainer bool
 }
 
+// NewCLI creates a new CLI instance
 func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
 	return &CLI{
 		Context:        ctx,
@@ -43,6 +45,7 @@ func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
 	}
 }
 
+// Run executes commands
 func (c *CLI) Run() error {
 	c.setup()
 	c.substituteCommand()
@@ -111,17 +114,20 @@ func (c *CLI) run() error {
 	return c.exec("docker-compose", args...)
 }
 
+// ExecVersion prints version info of dor
 func (c *CLI) ExecVersion() error {
 	fmt.Printf("%s (revision %s)", Version, Revision)
 	return nil
 }
 
+// ExecDebug prints internal state objects
 func (c *CLI) ExecDebug() error {
 	pp.Println(c.Context)
 	pp.Println(c.Config)
 	return nil
 }
 
+// ExecHelp shows help contents
 func (c *CLI) ExecHelp() error {
 	maxNameLen := 0
 	for name := range c.Substitution {
@@ -144,6 +150,7 @@ func (c *CLI) ExecHelp() error {
 	})
 }
 
+// ExecSubHelp shows help contents for a custom sub-command
 func (c *CLI) ExecSubHelp() error {
 	_, description := loadHelpFile(c.Args[1])
 	fmt.Fprint(os.Stderr, description)

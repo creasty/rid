@@ -13,6 +13,7 @@ const (
 	libexecDirName = "libexec"
 )
 
+// Substitution represents a custom sub-command
 type Substitution struct {
 	Command        string
 	Summary        string
@@ -21,6 +22,7 @@ type Substitution struct {
 	HelpFile       string
 }
 
+// Context represents a world where dor is executed
 type Context struct {
 	RootDir      string
 	BaseDir      string
@@ -29,6 +31,7 @@ type Context struct {
 	IP           string
 }
 
+// NewContext retrieves contextual information for a working directory, and creates Context instance
 func NewContext(path string) (*Context, error) {
 	c := &Context{
 		Substitution: map[string]*Substitution{
