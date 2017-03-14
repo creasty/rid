@@ -4,11 +4,16 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 )
 
 const (
 	WrapperPrefix = "devc-"
+)
+
+var (
+	newlinePattern = regexp.MustCompile("\r\n|\r|\n")
 )
 
 func getLocalIP() string {
@@ -48,6 +53,6 @@ func loadHelpFile(file string) (summary, description string) {
 	}
 
 	description = string(b[:])
-	summary = strings.SplitN(description, "\n", 2)[0] // FIXME: consider other newline chars
+	summary = newlinePattern.Split(description, 2)[0]
 	return
 }
