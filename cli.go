@@ -12,7 +12,8 @@ import (
 const helpTemplate = `Execute commands via docker-compose
 
 Usage:
-    devc [command]
+    devc COMMAND [args...]
+    devc -h|--help
 
 Commands:
 {{- range $name, $sub := .Substitution }}
@@ -39,12 +40,12 @@ func (c *CLI) Run() error {
 	c.substituteCommand()
 
 	switch c.Args[0] {
-	case ".config":
-		return c.ExecConfig()
+	case "--debug":
+		return c.ExecDebug()
+	case "-h", "--help", ".help":
+		return c.ExecHelp()
 	case ".sub-help":
 		return c.ExecSubHelp()
-	case ".help":
-		return c.ExecHelp()
 	}
 
 	if c.RunInContainer {
@@ -100,7 +101,7 @@ func (c *CLI) run() error {
 	return c.exec("docker-compose", args...)
 }
 
-func (c *CLI) ExecConfig() error {
+func (c *CLI) ExecDebug() error {
 	pp.Println(c.Context)
 	return nil
 }

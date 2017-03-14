@@ -41,14 +41,6 @@ func NewContext(path string) (*Context, error) {
 				Command: "docker-compose",
 				Summary: "Execute docker-compose",
 			},
-			"help": {
-				Command: ".help",
-				Summary: "Show this",
-			},
-			"config": {
-				Command: ".config",
-				Summary: "Debug context and configuration",
-			},
 		},
 	}
 	if err := c.findConfigFile(path); err != nil {
