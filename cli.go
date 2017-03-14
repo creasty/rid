@@ -13,6 +13,7 @@ const helpTemplate = `Execute commands via docker-compose
 
 Usage:
     devc COMMAND [args...]
+    devc COMMAND -h|--help
     devc -h|--help
 
 Commands:
