@@ -17,7 +17,7 @@ SRC_FILES    := $(shell find . -name '*.go' -not -path './vendor/*')
 #-----------------------------------------------
 .PHONY: build
 build:
-	@for os in darwin linux windows; do \
+	@for os in darwin linux; do \
 		for arch in amd64 386; do \
 			echo "==> Build $$os $$arch"; \
 			GOOS=$$os GOARCH=$$arch go build $(GO_BUILD_FLAGS) \
@@ -31,7 +31,7 @@ clean:
 
 .PHONY: lint
 lint:
-	@gofmt -e -d -s $(SRC_FILES) | awk '{ E=1; print $0 } END { if (E) exit(1) }'
+	@gofmt -e -d -s $(SRC_FILES) | awk '{ e = 1; print $0 } END { if (e) exit(1) }'
 	@echo $(SRC_FILES) | xargs -n1 golint -set_exit_status
 	@go vet $(PACKAGE_DIRS)
 
