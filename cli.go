@@ -120,7 +120,7 @@ func (c *CLI) run() error {
 
 // ExecVersion prints version info of dor
 func (c *CLI) ExecVersion() error {
-	fmt.Printf("%s (revision %s)", Version, Revision)
+	fmt.Printf("%s (revision %s)\n", Version, Revision)
 	return nil
 }
 
