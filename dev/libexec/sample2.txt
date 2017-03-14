@@ -1,4 +1,0 @@
-Prints system info
-
-Usage:
-    devc sample2

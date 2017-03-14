@@ -1,0 +1,4 @@
+Print a greeting message on host
+
+Usage:
+    dor sample NAME

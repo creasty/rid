@@ -1,4 +1,4 @@
-devc
-====
+dor
+===
 
-Development docker-compose
+Run commands via Docker containers

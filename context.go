@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	configFileName = "dev/devc.yml"
+	configFileName = "dor/dor.yml"
 	libexecDirName = "libexec"
 )
 

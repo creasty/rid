@@ -3,4 +3,4 @@
 set -eu
 set -o pipefail
 
-echo "Hello, $1"
+cat /etc/*-release

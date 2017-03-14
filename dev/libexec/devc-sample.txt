@@ -1,4 +1,0 @@
-Prints a greeting message
-
-Usage:
-    sample NAME

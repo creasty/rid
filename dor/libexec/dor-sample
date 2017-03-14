@@ -3,5 +3,4 @@
 set -eu
 set -o pipefail
 
-echo "$(uname -s)"
-echo "$(uname -m)"
+echo "Hello, $1. This is dor $(dor -v)"

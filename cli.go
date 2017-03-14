@@ -12,13 +12,13 @@ import (
 const helpTemplate = `Execute commands via docker-compose
 
 Usage:
-    devc COMMAND [args...]
-    devc COMMAND -h|--help
-    devc [options]
+    dor COMMAND [args...]
+    dor COMMAND -h|--help
+    dor [options]
 
 Options:
     -h, --help     Show this
-    -v, --version  Show devc version
+    -v, --version  Show dor version
         --debug    Debug context and configuration
 
 Commands:

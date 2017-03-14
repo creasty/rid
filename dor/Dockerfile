@@ -27,4 +27,4 @@ RUN apk add --no-cache -U \
 
 #  App
 #-----------------------------------------------
-WORKDIR /go/src/github.com/creasty/devc
+WORKDIR /go/src/github.com/creasty/dor

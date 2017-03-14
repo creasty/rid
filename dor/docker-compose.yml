@@ -2,11 +2,11 @@ version: '2.1'
 
 services:
   app:
-    container_name: creasty-devc-app
-    image: creasty/devc:dev
+    container_name: creasty-dor-app
+    image: creasty/dor:dev
     build: .
     volumes:
-      - ..:/go/src/github.com/creasty/devc
+      - ..:/go/src/github.com/creasty/dor
     volumes_from:
       - volume
     extra_hosts:
@@ -14,8 +14,8 @@ services:
     command: tail -f /dev/null
 
   volume:
-    container_name: creasty-devc-volume
+    container_name: creasty-dor-volume
     image: alpine:latest
     volumes:
-      - /go/src/github.com/creasty/devc/vendor
+      - /go/src/github.com/creasty/dor/vendor
     command: tail -f /dev/null

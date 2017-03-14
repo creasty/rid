@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	WrapperPrefix = "devc-"
+	WrapperPrefix = "dor-"
 )
 
 var (
