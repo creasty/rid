@@ -1,7 +1,8 @@
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := build
 
 SHELL := /bin/bash -eu -o pipefail
 
+NAME     := dor
 VERSION  := 0.0.1
 REVISION := $(shell git rev-parse --short HEAD)
 
@@ -9,24 +10,24 @@ GO_BUILD_FLAGS := -v -ldflags="-s -w -X \"github.com/creasty/dor.Version=$(VERSI
 GO_TEST_FLAGS  := -v -race
 
 PACKAGE_DIRS := $(shell go list ./... 2> /dev/null | grep -v /vendor/)
-
 SRC_FILES    := $(shell find . -name '*.go' -not -path './vendor/*')
-BIN          := bin/dor
-
-
-#  dor
-#-----------------------------------------------
-$(BIN): $(SRC_FILES)
-	go build $(GO_BUILD_FLAGS) -o $(BIN)
 
 
 #  Tasks
 #-----------------------------------------------
-all: $(BIN)
+.PHONY: build
+build:
+	@for os in darwin linux windows; do \
+		for arch in amd64 386; do \
+			echo "Build $$os $$arch"; \
+			GOOS=$$os GOARCH=$$arch go build $(GO_BUILD_FLAGS) \
+				-o dist/$$os-$$arch/$(NAME); \
+		done; \
+	done
 
 .PHONY: clean
 clean:
-	@rm -rf bin/*
+	@rm -rf dist/*
 
 .PHONY: lint
 lint:
