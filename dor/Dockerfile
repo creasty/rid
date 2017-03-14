@@ -18,6 +18,11 @@ RUN apk add --no-cache -U --virtual .build-deps \
     git
 
 
+#  Golint
+#-----------------------------------------------
+RUN go get -u github.com/golang/lint/golint
+
+
 #  Library
 #-----------------------------------------------
 RUN apk add --no-cache -U \
