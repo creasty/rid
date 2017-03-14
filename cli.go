@@ -29,13 +29,15 @@ Commands:
 
 type CLI struct {
 	*Context
+	Config         *Config
 	Args           []string
 	RunInContainer bool
 }
 
-func NewCLI(ctx *Context, args []string) *CLI {
+func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
 	return &CLI{
 		Context:        ctx,
+		Config:         cfg,
 		Args:           args[1:],
 		RunInContainer: true,
 	}
@@ -116,6 +118,7 @@ func (c *CLI) ExecVersion() error {
 
 func (c *CLI) ExecDebug() error {
 	pp.Println(c.Context)
+	pp.Println(c.Config)
 	return nil
 }
 

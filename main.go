@@ -12,12 +12,17 @@ func main() {
 		panic(err)
 	}
 
-	c, err := NewContext(wd)
+	ctx, err := NewContext(wd)
 	if err != nil {
 		panic(err)
 	}
 
-	cli := NewCLI(c, os.Args)
+	cfg, err := NewConfig(ctx.ConfigFile)
+	if err != nil {
+		panic(err)
+	}
+
+	cli := NewCLI(ctx, cfg, os.Args)
 	if err := cli.Run(); err != nil {
 		if _, ok := err.(*exec.ExitError); !ok {
 			fmt.Fprintln(os.Stderr, err)

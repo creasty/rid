@@ -3,13 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/asaskevich/govalidator"
-	"github.com/ghodss/yaml"
 )
 
 const (
@@ -30,7 +26,6 @@ type Context struct {
 	BaseDir      string
 	ConfigFile   string
 	Substitution map[string]*Substitution
-	Config       Config
 	IP           string
 }
 
@@ -44,9 +39,6 @@ func NewContext(path string) (*Context, error) {
 		},
 	}
 	if err := c.findConfigFile(path); err != nil {
-		return nil, err
-	}
-	if err := c.loadConfig(); err != nil {
 		return nil, err
 	}
 	if err := c.getLocalIP(); err != nil {
@@ -107,35 +99,6 @@ func (c *Context) findSubstitutions() error {
 		if e, ok := c.Substitution[name]; ok {
 			e.HelpFile = file
 		}
-	}
-
-	return nil
-}
-
-func (c *Context) loadConfig() error {
-	f, err := os.Open(c.ConfigFile)
-	if err != nil {
-		return nil
-	}
-
-	b, err := ioutil.ReadAll(f)
-	if err != nil {
-		return err
-	}
-
-	if err := yaml.Unmarshal(b, &c.Config); err != nil {
-		return err
-	}
-
-	if _, err := govalidator.ValidateStruct(c.Config); err != nil {
-		return err
-	}
-
-	if c.Config.MainService == "" {
-		c.Config.MainService = DefaultMainService
-	}
-	if c.Config.DataService == "" {
-		c.Config.DataService = DefaultVolumeService
 	}
 
 	return nil
