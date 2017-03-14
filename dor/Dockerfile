@@ -27,7 +27,8 @@ RUN go get -u github.com/golang/lint/golint
 #-----------------------------------------------
 RUN apk add --no-cache -U \
     bash \
-    coreutils
+    coreutils \
+    make
 
 
 #  App
