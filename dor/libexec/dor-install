@@ -3,7 +3,6 @@
 set -eu
 set -o pipefail
 
-pwd
 OS="$(uname -s | awk '{ print tolower($0) }')"
 ARCH="$(uname -m)"
 [[ "$ARCH" =~ _64$ ]] && ARCH='amd64'
