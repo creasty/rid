@@ -2,7 +2,6 @@ version: '2.1'
 
 services:
   app:
-    container_name: creasty-dor-app
     image: creasty/dor:dev
     build: .
     volumes:
@@ -14,7 +13,6 @@ services:
     command: tail -f /dev/null
 
   volume:
-    container_name: creasty-dor-volume
     image: alpine:latest
     volumes:
       - /go/src/github.com/creasty/dor/vendor
