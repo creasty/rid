@@ -2,8 +2,8 @@ package main
 
 import (
 	"io/ioutil"
+	"net"
 	"os"
-	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -13,16 +13,25 @@ var (
 )
 
 func getLocalIP() string {
-	for _, i := range []string{"en0", "en1", "en2"} {
-		cmd := exec.Command("ipconfig", "getifaddr", i)
-		b, err := cmd.Output()
-		if err != nil {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return ""
+	}
+
+	for _, address := range addrs {
+		ipnet, ok := address.(*net.IPNet)
+		if !ok {
 			continue
 		}
 
-		if len(b) > 0 {
-			return strings.Trim(string(b[:]), "\n")
+		if ipnet.IP.IsLoopback() {
+			continue
 		}
+		if ipnet.IP.To4() == nil {
+			continue
+		}
+
+		return ipnet.IP.String()
 	}
 
 	return ""
