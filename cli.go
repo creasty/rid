@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"text/template"
@@ -33,6 +34,10 @@ type CLI struct {
 	Config         *Config
 	Args           []string
 	RunInContainer bool
+
+	Stdin  io.Reader
+	Stdout io.Writer
+	Stderr io.Writer
 }
 
 // NewCLI creates a new CLI instance
@@ -42,6 +47,10 @@ func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
 		Config:         cfg,
 		Args:           args[1:],
 		RunInContainer: true,
+
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 	}
 }
 
@@ -99,9 +108,9 @@ func (c *CLI) exec(name string, args ...string) error {
 	} else {
 		cmd.Dir = c.RootDir
 	}
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	cmd.Stdin = c.Stdin
+	cmd.Stdout = c.Stdout
+	cmd.Stderr = c.Stderr
 	return cmd.Run()
 }
 
@@ -120,14 +129,14 @@ func (c *CLI) run() error {
 
 // ExecVersion prints version info of dor
 func (c *CLI) ExecVersion() error {
-	fmt.Printf("%s (revision %s)\n", Version, Revision)
+	fmt.Fprintf(c.Stdout, "%s (revision %s)\n", Version, Revision)
 	return nil
 }
 
 // ExecDebug prints internal state objects
 func (c *CLI) ExecDebug() error {
-	pp.Println(c.Context)
-	pp.Println(c.Config)
+	pp.Fprintln(c.Stdout, c.Context)
+	pp.Fprintln(c.Stdout, c.Config)
 	return nil
 }
 
@@ -148,7 +157,7 @@ func (c *CLI) ExecHelp() error {
 	}
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
-	return tmpl.Execute(os.Stderr, map[string]interface{}{
+	return tmpl.Execute(c.Stderr, map[string]interface{}{
 		"Substitution": c.Substitution,
 		"NameFormat":   fmt.Sprintf("%%-%ds", maxNameLen+1),
 	})
@@ -157,6 +166,6 @@ func (c *CLI) ExecHelp() error {
 // ExecSubHelp shows help contents for a custom sub-command
 func (c *CLI) ExecSubHelp() error {
 	_, description := loadHelpFile(c.Args[1])
-	fmt.Fprint(os.Stderr, description)
+	fmt.Fprint(c.Stderr, description)
 	return nil
 }
