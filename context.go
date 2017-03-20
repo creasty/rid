@@ -31,7 +31,7 @@ type Context struct {
 	IP           string
 }
 
-// NewContext retrieves contextual information for a working directory, and creates Context instance
+// NewContext retrieves contextual information for a working directory, and creates a Context instance
 func NewContext(path string) (*Context, error) {
 	c := &Context{
 		Substitution: map[string]*Substitution{
