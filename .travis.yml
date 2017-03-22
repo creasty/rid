@@ -1,12 +1,13 @@
 language: go
 go:       1.7
 
+branches:
+  only:
+    - master
+
 cache:
   directories:
     - vendor
-
-env:
-  global:
 
 before_install:
   - sudo add-apt-repository ppa:masterminds/glide -y
