@@ -1,0 +1,37 @@
+language: go
+go:       1.7
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - vendor
+
+before_install:
+  - sudo add-apt-repository ppa:masterminds/glide -y
+  - sudo apt-get update -q
+  - sudo apt-get install glide -y
+  - mkdir -p $GOPATH/bin
+  - go get -u github.com/golang/lint/golint
+
+install:
+  - glide install
+
+script:
+  - make test
+
+before_deploy:
+  - make build
+  - make dist
+
+deploy:
+  provider: releases
+  api_key:
+    secure: BwAA9NkX4RhBDYiMNsniOqvJuBtDGVa32byF0U2WP5p/DNvqURlNJPDmewrRFOICsF63EdJgNkYJY/wbFMUYKTKl2TUKLh+GpYoR+X12LZh03YWziy4V/RmDq91Rr7A8CYGgl5u1z1LIfDTmPJi+AtBzlhhZOTAtuGjUR1W05XDQ7Vm8yuvVb+Duj54v26DeCBHbENtp6VU3VQBLj/JxrLKkTdDEUgZvP3rB22sL24w0K3kAHQI5F7gUBRnzC/RoTKPMSd007AZSfbLETAAhhSO+haNxvjZm0zIaFAHAYpEnzgU21v4SXwSe0IvQ/XfD87Rw3HFUQzdzFhhDre6Ez22EM1C6ivL2xkQCP1UMqS3QQcfbuq+lxfQBPWO8dMBw802d6iYb4kEa1r2Ns9N7HIC7M2DYAXcCzPc2E8HuGXHDiyvzItmOzKa0QYlQ6UVGw/n8srkftwYjPeOmlVWWawdHL86wW+sl2R/xxUXO6zwbqWO/TGFOe7LWCZgrLprES1h/ZFExxzEcG0aor7p0BuODhsvwxgWoVd+AmE8q1Dnyv5CC3CwaMLgUFFMKnx16mWFKJEE8Ax+beW8zXVPWH1NaDs+ntK4iSfXXzrgkgA7yoZjkxdOTtXuIUTADErJXNtvE5DmPzHzkpl5YpFSo8diYdEXFQXKzrWNNTJBsxfc=
+  skip_cleanup: true
+  file_glob: true
+  file: 'dist/*.{tar.gz,zip}'
+  on:
+    tags: true
