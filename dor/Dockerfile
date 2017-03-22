@@ -34,4 +34,6 @@ RUN apk add --no-cache -U \
 
 #  App
 #-----------------------------------------------
-WORKDIR /go/src/github.com/creasty/dor
+ENV APP_DIR /go/src/github.com/creasty/dor
+WORKDIR $APP_DIR
+RUN ln -sf $APP_DIR /app

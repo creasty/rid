@@ -5,7 +5,7 @@ services:
     image: creasty/dor:dev
     build: .
     volumes:
-      - ..:/go/src/github.com/creasty/dor
+      - ..:/app
     volumes_from:
       - volume
     extra_hosts:
@@ -15,5 +15,5 @@ services:
   volume:
     image: alpine:latest
     volumes:
-      - /go/src/github.com/creasty/dor/vendor
+      - /app/vendor
     command: tail -f /dev/null
