@@ -10,8 +10,8 @@ import (
 
 // Default config values
 const (
-	DefaultMainService   = "app"
-	DefaultVolumeService = "volume"
+	DefaultMainService = "app"
+	DefaultDataService = "volume"
 )
 
 // Config is a configuration object which parameters are loaded from yaml file
@@ -53,6 +53,6 @@ func (c *Config) setDefault() {
 		c.MainService = DefaultMainService
 	}
 	if c.DataService == "" {
-		c.DataService = DefaultVolumeService
+		c.DataService = DefaultDataService
 	}
 }
