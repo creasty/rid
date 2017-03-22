@@ -5,6 +5,11 @@ branches:
   only:
     - master
 
+env:
+  global:
+    # CODECOV_TOKEN
+    - secure: "RVlGAb0nD4W0WJWMKRT+fKZ+Y+HOfHGXcY+4JGuHcwuacR4QGmyj+C6wP/4h1N1oH6JeNGt51m9ltaiLCn1ETEZi9uEukM9THqhjgJi2zf+v7x4UDtRaYEyQG4xWI5IlJ2h+TNXR3/fiYOFUcV4jUSgfiryW3ZDvNAK+eLURLmZplBZUt8+op0OgfgpOWi2/Vx4R1ZXj42XVjgqte1JJzEWdDEHMGsZyrKQZvRKiG2Nd69L8unhFkgpNdBakSO08ZSGOIIKtQqia3sZDVYzSh9ofJrSGi4/2BAWzhRqYxv34SO6kvQSBbK2ACDw3QMyYs5AqFZersgsZ9JzshAisajKcGrxmz4YGQrTYULE/GI352GbaLvVP1s9abuG77PDTOmsFbnmAEpFff3CaG3EKfvXB+MwLBXdEwDKHnXf4w2zBES4Kd6PSKcECCYRdrzj2xQ6GCjUKSzBLINgP7tlek++l0sv9T8x6utGDj/4dZp8AN2p+EHZx7aQL6338HxnnFV6u7CNWGqzxA6ih6Ar6jldH+PPLPXqAAo6isYTGxTY9SOJ2dOE70/vm6k0dKexonGxrxAUP6pBcVXRc/+W7dITq/usRnCScIBF3+TuQ50AzFpCw7icmkLLld6wM9iW/DNdbm7cbY/2nimgmN8DSnzOu1k5tJucPVdOFTzShGK0="
+
 cache:
   directories:
     - vendor
@@ -20,7 +25,10 @@ install:
   - glide install
 
 script:
-  - make test
+  - make ci-test
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 before_deploy:
   - make build
