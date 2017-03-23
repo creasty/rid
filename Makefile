@@ -54,6 +54,6 @@ dist:
 	@cd dist \
 		&& find * -type d -exec cp ../LICENSE {} \; \
 		&& find * -type d -exec cp ../README.md {} \; \
-		&& find * -type d -exec tar -zcf $(NAME)-{}-$(VERSION).tar.gz {} \; \
-		&& find * -type d -exec zip -r $(NAME)-{}-$(VERSION).zip {} \; \
+		&& find * -type d -exec tar -zcf $(NAME)-{}.tar.gz {} \; \
+		&& find * -type d -exec zip -r $(NAME)-{}.zip {} \; \
 		&& cd ..
