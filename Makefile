@@ -46,8 +46,8 @@ ci-test: lint
 
 .PHONY: release
 release:
-	git tag $(VERSION)
-	git push origin $(VERSION)
+	git tag v$(VERSION)
+	git push origin v$(VERSION)
 
 .PHONY: dist
 dist:

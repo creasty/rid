@@ -1,6 +1,11 @@
 language: go
 go:       1.7
 
+branches:
+  only:
+    - master
+    - /^v[\d\.]+$/
+
 env:
   global:
     # CODECOV_TOKEN
