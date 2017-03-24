@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := all
 
 SHELL := /bin/bash -eu -o pipefail
 
@@ -14,10 +14,18 @@ PACKAGE_DIRS := $(shell go list ./... 2> /dev/null | grep -v /vendor/)
 SRC_FILES    := $(shell find . -name '*.go' -not -path './vendor/*')
 
 
+#  bin
+#-----------------------------------------------
+bin/$(NAME): $(SRC_FILES)
+	@GOOS=darwin GOARCH=amd64 go build $(GO_BUILD_FLAGS) -o bin/$(NAME)
+
+
 #  Tasks
 #-----------------------------------------------
-.PHONY: build
-build:
+all: bin/$(NAME)
+
+.PHONY: ci-build
+ci-build:
 	@for os in darwin linux; do \
 		for arch in amd64 386; do \
 			echo "==> Build $$os $$arch"; \

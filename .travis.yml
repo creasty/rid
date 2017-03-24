@@ -32,7 +32,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 before_deploy:
-  - make build
+  - make ci-build
   - make dist
 
 deploy:
