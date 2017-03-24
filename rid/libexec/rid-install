@@ -3,8 +3,5 @@
 set -eu
 set -o pipefail
 
-OS="$(uname -s | awk '{ print tolower($0) }')"
-ARCH="$(uname -m)"
-[[ "$ARCH" =~ _64$ ]] && ARCH='amd64'
-
-cp -f "./dist/$OS-$ARCH/rid" /usr/local/bin/
+[ -f ./bin/rid ] || rid make
+cp -f ./bin/rid /usr/local/bin/
