@@ -7,4 +7,4 @@ OS="$(uname -s | awk '{ print tolower($0) }')"
 ARCH="$(uname -m)"
 [[ "$ARCH" =~ _64$ ]] && ARCH='amd64'
 
-cp -f "./dist/$OS-$ARCH/dor" /usr/local/bin/
+cp -f "./dist/$OS-$ARCH/rid" /usr/local/bin/

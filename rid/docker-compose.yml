@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   app:
-    image: creasty/dor:dev
+    image: creasty/rid:dev
     build: .
     volumes:
       - ..:/app

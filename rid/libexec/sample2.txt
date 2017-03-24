@@ -1,4 +1,4 @@
 Print OS info of conatiner
 
 Usage:
-    dor sample2
+    rid sample2
