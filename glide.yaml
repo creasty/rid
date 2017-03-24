@@ -1,4 +1,4 @@
-package: github.com/creasty/dor
+package: github.com/creasty/rid
 import:
 - package: github.com/asaskevich/govalidator
   version: ^5.0.0

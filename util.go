@@ -37,8 +37,7 @@ func getLocalIP() string {
 	return ""
 }
 
-func removeWrapperPrefix(str string) (string, bool) {
-	const prefix = "dor-"
+func removePrefix(prefix, str string) (string, bool) {
 	had := strings.HasPrefix(str, prefix)
 	return strings.TrimPrefix(str, prefix), had
 }

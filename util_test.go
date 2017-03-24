@@ -11,9 +11,9 @@ func TestGetLocalIP(t *testing.T) {
 	}
 }
 
-func TestRemoveWrapperPrefix(t *testing.T) {
+func TestRemovePrefix(t *testing.T) {
 	t.Run("without prefix", func(t *testing.T) {
-		str, ok := removeWrapperPrefix("aaa-foo")
+		str, ok := removePrefix("prefix-", "aaa-foo")
 		if ok {
 			t.Fatal("it should return false")
 		}
@@ -23,7 +23,7 @@ func TestRemoveWrapperPrefix(t *testing.T) {
 	})
 
 	t.Run("with prefix", func(t *testing.T) {
-		str, ok := removeWrapperPrefix("dor-foo")
+		str, ok := removePrefix("prefix-", "prefix-foo")
 		if !ok {
 			t.Fatal("it should return true")
 		}

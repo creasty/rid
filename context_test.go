@@ -49,7 +49,7 @@ func TestContext_findSubstitutions(t *testing.T) {
 
 	t.Run("non RIC command", func(t *testing.T) {
 		cmd := c.Substitution["sample"]
-		if cmd.Command != filepath.Join(c.BaseDir, "libexec", "dor-sample") {
+		if cmd.Command != filepath.Join(c.BaseDir, "libexec", "rid-sample") {
 			t.Fatal("it should be located")
 		}
 		if cmd.RunInContainer {
@@ -59,7 +59,7 @@ func TestContext_findSubstitutions(t *testing.T) {
 
 	t.Run("RIC command", func(t *testing.T) {
 		cmd := c.Substitution["sample2"]
-		if cmd.Command != filepath.Join("dor", "libexec", "sample2") {
+		if cmd.Command != filepath.Join("rid", "libexec", "sample2") {
 			t.Fatal("it should be located")
 		}
 		if !cmd.RunInContainer {

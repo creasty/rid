@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	configFileName = "dor/dor.yml"
+	configFileName = "rid/config.yml"
 	libexecDirName = "libexec"
 )
 
@@ -22,7 +22,7 @@ type Substitution struct {
 	HelpFile       string
 }
 
-// Context represents a world where dor is executed
+// Context represents a world where the command is executed
 type Context struct {
 	RootDir      string
 	BaseDir      string
@@ -81,7 +81,7 @@ func (c *Context) findSubstitutions() error {
 		basename := filepath.Base(f)
 
 		if s, err := os.Stat(f); err == nil && (s.Mode()&0111) != 0 {
-			name, wrapper := removeWrapperPrefix(basename)
+			name, wrapper := removePrefix("rid-", basename)
 			if !wrapper {
 				f, _ = filepath.Rel(c.RootDir, f)
 			}
@@ -98,7 +98,7 @@ func (c *Context) findSubstitutions() error {
 	}
 
 	for name, file := range help {
-		name, _ = removeWrapperPrefix(name)
+		name, _ = removePrefix("rid-", name)
 		if e, ok := c.Substitution[name]; ok {
 			e.HelpFile = file
 		}

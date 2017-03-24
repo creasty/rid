@@ -13,13 +13,13 @@ import (
 const helpTemplate = `Execute commands via docker-compose
 
 Usage:
-    dor COMMAND [args...]
-    dor COMMAND -h|--help
-    dor [options]
+    {{ .Name }} COMMAND [args...]
+    {{ .Name }} COMMAND -h|--help
+    {{ .Name }} [options]
 
 Options:
     -h, --help     Show this
-    -v, --version  Show dor version
+    -v, --version  Show {{ .Name }} version
         --debug    Debug context and configuration
 
 Commands:
@@ -28,7 +28,7 @@ Commands:
 {{- end }}
 `
 
-// CLI is an object holding states of the dor command
+// CLI is an object holding states
 type CLI struct {
 	*Context
 	Config         *Config
@@ -127,7 +127,7 @@ func (c *CLI) run() error {
 	return c.exec("docker-compose", args...)
 }
 
-// ExecVersion prints version info of dor
+// ExecVersion prints version info
 func (c *CLI) ExecVersion() error {
 	fmt.Fprintf(c.Stdout, "%s (revision %s)\n", Version, Revision)
 	return nil
@@ -160,6 +160,7 @@ func (c *CLI) ExecHelp() error {
 	return tmpl.Execute(c.Stderr, map[string]interface{}{
 		"Substitution": c.Substitution,
 		"NameFormat":   fmt.Sprintf("%%-%ds", maxNameLen+1),
+		"Name":         "rid",
 	})
 }
 

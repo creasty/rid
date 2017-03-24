@@ -2,7 +2,7 @@
 
 SHELL := /bin/bash -eu -o pipefail
 
-NAME     := dor
+NAME     := rid
 VERSION  := 0.0.1
 REVISION := $(shell git rev-parse --short HEAD)
 
