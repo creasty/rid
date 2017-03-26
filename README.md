@@ -9,7 +9,7 @@ Run commands in container as if were native. Stress-free dockerized development 
 What is rid?
 ------------
 
-With a rid directory on a root directory of project, any command prefixed by `rid` is executed within a Docker container.
+With a `rid/` directory at the root of a project, any command prefixed by `rid` is executed within a Docker container.
 
 ```hcl
 $ ls ./rid
@@ -18,8 +18,8 @@ docker-compose.yml
 Dockerfile
 ```
 
-Lo and behold, even if your environment is absolutely clean and there's only `docker` and `docker-compose` are installed,
-all you have to do is the followings so as to get started with a new project from scratch.
+Now, lo and behold, even if your environment is absolutely clean and only `docker` and `docker-compose` are installed,  
+all you have to do is the followings so as to get started with the new project from scratch.
 
 
 ```hcl
