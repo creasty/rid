@@ -40,13 +40,31 @@ $ rid rails s
 Installation
 ------------
 
+First, install [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/). The easiest way to do this on MacOS is by installing [Docker for Mac](https://docs.docker.com/docker-for-mac/).
+
 ### MacOS
 
 ```hcl
 $ brew install creasty/tools/rid
 ```
 
-### Other
+### Linux
 
-Download from here:  
-https://github.com/creasty/rid/releases
+Download it from here: https://github.com/creasty/rid/releases
+
+### Windows
+
+Not supported yet
+
+
+Development
+-----------
+
+`rid` itself is also developed by `rid`.
+
+```hcl
+$ rid glide install  # install dependencies
+$ rid make test      # run lint and tests
+$ rid make           # compile for darwin/amd64
+$ ./bin/rid -v
+```
