@@ -21,9 +21,7 @@ docker-compose.yml
 Dockerfile
 ```
 
-Now, lo and behold, even if your environment is absolutely clean and only `docker` and `docker-compose` are installed,  
-all you have to do is the followings so as to get started with the new project from scratch.
-
+That is to say, even if your environment is absolutely clean and all you have is only `docker` and `docker-compose`, getting started with a new Rails project from scratch has never been easier.
 
 ```hcl
 # install dependencies and setup a database
