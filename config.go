@@ -11,14 +11,16 @@ import (
 // Default config values
 const (
 	DefaultMainService = "app"
-	DefaultDataService = "volume"
 )
 
 // Config is a configuration object which parameters are loaded from yaml file
 type Config struct {
+	// ProjectName is used for `docker-compose` in order to distinguish projects in other locations
 	ProjectName string `json:"project_name" valid:"required"`
+
+	// MainService is a service name in `docker-compose.yml`, in which container commands given to rid are executed.
+	// Default is "app"
 	MainService string `json:"main_service"`
-	DataService string `json:"data_service"`
 }
 
 // NewConfig creates a new Config instance from a file and validates its parameters
@@ -51,8 +53,5 @@ func NewConfig(file string) (*Config, error) {
 func (c *Config) setDefault() {
 	if c.MainService == "" {
 		c.MainService = DefaultMainService
-	}
-	if c.DataService == "" {
-		c.DataService = DefaultDataService
 	}
 }

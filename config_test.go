@@ -26,10 +26,6 @@ func TestNewConfig(t *testing.T) {
 		if c.MainService != DefaultMainService {
 			t.Fatal("MainService should be a default value")
 		}
-
-		if c.DataService != DefaultDataService {
-			t.Fatal("DataService should be a default value")
-		}
 	})
 
 	t.Run("custom config", func(t *testing.T) {
@@ -44,10 +40,6 @@ func TestNewConfig(t *testing.T) {
 
 		if c.MainService != "apple" {
 			t.Fatal("MainService should be set from the file")
-		}
-
-		if c.DataService != "banana" {
-			t.Fatal("DataService should be set from the file")
 		}
 	})
 }
