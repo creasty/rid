@@ -1,3 +1,6 @@
+![](https://cloud.githubusercontent.com/assets/1695538/24829859/002571a4-1cb5-11e7-8e1b-c9b04d171828.png)
+
+
 rid (run-in-docker)
 ===================
 
