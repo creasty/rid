@@ -164,6 +164,43 @@ func TestCLI_ExecDebug(t *testing.T) {
 	}
 }
 
+func TestCLI_ExecHelp(t *testing.T) {
+	stderr := new(bytes.Buffer)
+
+	cli := NewCLI(&Context{
+		Command: map[string]*Command{
+			"foobar": {
+				Name: "script/foobar",
+			},
+		},
+	}, &Config{}, []string{"rid"})
+	cli.Stderr = stderr
+
+	if err := cli.ExecHelp(); err != nil {
+		t.Fatalf("it should not return error: %v", err)
+	}
+
+	if !strings.Contains(stderr.String(), "foobar") {
+		t.Error("it should print a help")
+	}
+}
+
+func TestCLI_ExecSubHelp(t *testing.T) {
+	stderr := new(bytes.Buffer)
+
+	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
+	cli.Args = []string{".sub-help", "./rid/libexec/rid-sample.txt"}
+	cli.Stderr = stderr
+
+	if err := cli.ExecHelp(); err != nil {
+		t.Fatalf("it should not return error: %v", err)
+	}
+
+	if !strings.Contains(stderr.String(), "Usage:") {
+		t.Error("it should print a help of sub command")
+	}
+}
+
 func setTestEnvs(kv map[string]string) func() {
 	original := make(map[string]string)
 	for k, v := range kv {
