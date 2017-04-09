@@ -71,10 +71,10 @@ func (c *CLI) Run() error {
 	}
 
 	if c.RunInContainer {
-		return c.run()
+		return c.runInContainer(c.Args[0], c.Args[1:]...)
 	}
 
-	return c.exec(c.Args[0], c.Args[1:]...)
+	return c.run(c.Args[0], c.Args[1:]...)
 }
 
 func (c *CLI) setup() {
@@ -101,7 +101,7 @@ func (c *CLI) substituteCommand() {
 	}
 }
 
-func (c *CLI) exec(name string, args ...string) error {
+func (c *CLI) run(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
 	if name == "docker-compose" {
 		cmd.Dir = c.BaseDir
@@ -114,17 +114,18 @@ func (c *CLI) exec(name string, args ...string) error {
 	return cmd.Run()
 }
 
-func (c *CLI) run() error {
-	if err := c.exec("docker-compose", "up", "-d", "--remove-orphans"); err != nil {
+func (c *CLI) runInContainer(name string, args ...string) error {
+	if err := c.run("docker-compose", "up", "-d", "--remove-orphans"); err != nil {
 		return err
 	}
 
-	args := append([]string{
+	args = append([]string{
 		"exec",
 		c.Config.MainService,
-	}, c.Args...)
+		name,
+	}, args...)
 
-	return c.exec("docker-compose", args...)
+	return c.run("docker-compose", args...)
 }
 
 // ExecVersion prints version info
