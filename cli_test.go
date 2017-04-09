@@ -6,7 +6,13 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/k0kubun/pp"
 )
+
+func init() {
+	pp.ColoringEnabled = false
+}
 
 func TestNewCLI(t *testing.T) {
 	cli := NewCLI(&Context{}, &Config{}, []string{"rid", "foo", "bar"})
@@ -137,6 +143,24 @@ func TestCLI_ExecVersion(t *testing.T) {
 	}
 	if !strings.Contains(stdout.String(), Revision) {
 		t.Error("it should print a revision")
+	}
+}
+
+func TestCLI_ExecDebug(t *testing.T) {
+	stdout := new(bytes.Buffer)
+
+	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
+	cli.Stdout = stdout
+
+	if err := cli.ExecDebug(); err != nil {
+		t.Fatalf("it should not return error: %v", err)
+	}
+
+	if !strings.Contains(stdout.String(), "&main.Context{") {
+		t.Error("it should dump a Context object")
+	}
+	if !strings.Contains(stdout.String(), "&main.Config{") {
+		t.Error("it should dump a Config object")
 	}
 }
 
