@@ -115,7 +115,7 @@ func (c *CLI) exec(name string, args ...string) error {
 }
 
 func (c *CLI) run() error {
-	if err := c.exec("docker-compose", "up", "-d"); err != nil {
+	if err := c.exec("docker-compose", "up", "-d", "--remove-orphans"); err != nil {
 		return err
 	}
 
