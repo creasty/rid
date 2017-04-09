@@ -23,14 +23,14 @@ Options:
         --debug    Debug context and configuration
 
 Commands:
-{{- range $name, $sub := .Substitution }}
+{{- range $name, $sub := .Command }}
     {{ printf $.NameFormat $name }}{{ if ne $sub.Summary "" }} # {{ $sub.Summary }}{{ end }}
 {{- end }}
 `
 
 // CLI is an object holding states
 type CLI struct {
-	*Context
+	Context        *Context
 	Config         *Config
 	Args           []string
 	RunInContainer bool
@@ -71,15 +71,15 @@ func (c *CLI) Run() error {
 	}
 
 	if c.RunInContainer {
-		return c.run()
+		return c.runInContainer(c.Args[0], c.Args[1:]...)
 	}
 
-	return c.exec(c.Args[0], c.Args[1:]...)
+	return c.run(c.Args[0], c.Args[1:]...)
 }
 
 func (c *CLI) setup() {
 	os.Setenv("COMPOSE_PROJECT_NAME", c.Config.ProjectName)
-	os.Setenv("DOCKER_HOST_IP", c.IP)
+	os.Setenv("DOCKER_HOST_IP", c.Context.IP)
 }
 
 func (c *CLI) substituteCommand() {
@@ -88,25 +88,25 @@ func (c *CLI) substituteCommand() {
 		return
 	}
 
-	if s, ok := c.Substitution[c.Args[0]]; ok {
-		c.Args[0] = s.Command
-		c.RunInContainer = s.RunInContainer
+	if cmd, ok := c.Context.Command[c.Args[0]]; ok {
+		c.Args[0] = cmd.Name
+		c.RunInContainer = cmd.RunInContainer
 
-		if s.HelpFile != "" && len(c.Args) > 1 {
+		if cmd.HelpFile != "" && len(c.Args) > 1 {
 			switch c.Args[1] {
 			case "-h", "--help":
-				c.Args = []string{".sub-help", s.HelpFile}
+				c.Args = []string{".sub-help", cmd.HelpFile}
 			}
 		}
 	}
 }
 
-func (c *CLI) exec(name string, args ...string) error {
+func (c *CLI) run(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
 	if name == "docker-compose" {
-		cmd.Dir = c.BaseDir
+		cmd.Dir = c.Context.BaseDir
 	} else {
-		cmd.Dir = c.RootDir
+		cmd.Dir = c.Context.RootDir
 	}
 	cmd.Stdin = c.Stdin
 	cmd.Stdout = c.Stdout
@@ -114,17 +114,18 @@ func (c *CLI) exec(name string, args ...string) error {
 	return cmd.Run()
 }
 
-func (c *CLI) run() error {
-	if err := c.exec("docker-compose", "up", "-d", "--remove-orphans"); err != nil {
+func (c *CLI) runInContainer(name string, args ...string) error {
+	if err := c.run("docker-compose", "up", "-d", "--remove-orphans"); err != nil {
 		return err
 	}
 
-	args := append([]string{
+	args = append([]string{
 		"exec",
 		c.Config.MainService,
-	}, c.Args...)
+		name,
+	}, args...)
 
-	return c.exec("docker-compose", args...)
+	return c.run("docker-compose", args...)
 }
 
 // ExecVersion prints version info
@@ -143,24 +144,24 @@ func (c *CLI) ExecDebug() error {
 // ExecHelp shows help contents
 func (c *CLI) ExecHelp() error {
 	maxNameLen := 0
-	for name := range c.Substitution {
+	for name := range c.Context.Command {
 		if l := len(name); l > maxNameLen {
 			maxNameLen = l
 		}
 	}
 
-	for _, s := range c.Substitution {
-		if s.HelpFile == "" {
+	for _, cmd := range c.Context.Command {
+		if cmd.HelpFile == "" {
 			continue
 		}
-		s.Summary, _ = loadHelpFile(s.HelpFile)
+		cmd.Summary, _ = loadHelpFile(cmd.HelpFile)
 	}
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
 	return tmpl.Execute(c.Stderr, map[string]interface{}{
-		"Substitution": c.Substitution,
-		"NameFormat":   fmt.Sprintf("%%-%ds", maxNameLen+1),
-		"Name":         "rid",
+		"Command":    c.Context.Command,
+		"NameFormat": fmt.Sprintf("%%-%ds", maxNameLen+1),
+		"Name":       "rid",
 	})
 }
 

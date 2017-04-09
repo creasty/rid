@@ -40,7 +40,7 @@ func TestContext_findSubstitutions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	c := &Context{Substitution: make(map[string]*Substitution)}
+	c := &Context{Command: make(map[string]*Command)}
 	c.findConfigFile(wd)
 
 	if err := c.findSubstitutions(); err != nil {
@@ -48,8 +48,8 @@ func TestContext_findSubstitutions(t *testing.T) {
 	}
 
 	t.Run("non RIC command", func(t *testing.T) {
-		cmd := c.Substitution["sample"]
-		if cmd.Command != filepath.Join(c.BaseDir, "libexec", "rid-sample") {
+		cmd := c.Command["sample"]
+		if cmd.Name != filepath.Join(c.BaseDir, "libexec", "rid-sample") {
 			t.Fatal("it should be located")
 		}
 		if cmd.RunInContainer {
@@ -58,8 +58,8 @@ func TestContext_findSubstitutions(t *testing.T) {
 	})
 
 	t.Run("RIC command", func(t *testing.T) {
-		cmd := c.Substitution["sample2"]
-		if cmd.Command != filepath.Join("rid", "libexec", "sample2") {
+		cmd := c.Command["sample2"]
+		if cmd.Name != filepath.Join("rid", "libexec", "sample2") {
 			t.Fatal("it should be located")
 		}
 		if !cmd.RunInContainer {
