@@ -30,7 +30,7 @@ Commands:
 
 // CLI is an object holding states
 type CLI struct {
-	*Context
+	Context        *Context
 	Config         *Config
 	Args           []string
 	RunInContainer bool
@@ -79,7 +79,7 @@ func (c *CLI) Run() error {
 
 func (c *CLI) setup() {
 	os.Setenv("COMPOSE_PROJECT_NAME", c.Config.ProjectName)
-	os.Setenv("DOCKER_HOST_IP", c.IP)
+	os.Setenv("DOCKER_HOST_IP", c.Context.IP)
 }
 
 func (c *CLI) substituteCommand() {
@@ -88,7 +88,7 @@ func (c *CLI) substituteCommand() {
 		return
 	}
 
-	if s, ok := c.Substitution[c.Args[0]]; ok {
+	if s, ok := c.Context.Substitution[c.Args[0]]; ok {
 		c.Args[0] = s.Command
 		c.RunInContainer = s.RunInContainer
 
@@ -104,9 +104,9 @@ func (c *CLI) substituteCommand() {
 func (c *CLI) run(name string, args ...string) error {
 	cmd := exec.Command(name, args...)
 	if name == "docker-compose" {
-		cmd.Dir = c.BaseDir
+		cmd.Dir = c.Context.BaseDir
 	} else {
-		cmd.Dir = c.RootDir
+		cmd.Dir = c.Context.RootDir
 	}
 	cmd.Stdin = c.Stdin
 	cmd.Stdout = c.Stdout
@@ -144,13 +144,13 @@ func (c *CLI) ExecDebug() error {
 // ExecHelp shows help contents
 func (c *CLI) ExecHelp() error {
 	maxNameLen := 0
-	for name := range c.Substitution {
+	for name := range c.Context.Substitution {
 		if l := len(name); l > maxNameLen {
 			maxNameLen = l
 		}
 	}
 
-	for _, s := range c.Substitution {
+	for _, s := range c.Context.Substitution {
 		if s.HelpFile == "" {
 			continue
 		}
@@ -159,7 +159,7 @@ func (c *CLI) ExecHelp() error {
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
 	return tmpl.Execute(c.Stderr, map[string]interface{}{
-		"Substitution": c.Substitution,
+		"Substitution": c.Context.Substitution,
 		"NameFormat":   fmt.Sprintf("%%-%ds", maxNameLen+1),
 		"Name":         "rid",
 	})
