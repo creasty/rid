@@ -33,18 +33,19 @@ func TestCLI_setup(t *testing.T) {
 		ProjectName: "myproject",
 	}, []string{"rid"})
 
-	setTestEnvs(map[string]string{
+	reset := setTestEnvs(map[string]string{
 		"COMPOSE_PROJECT_NAME": "",
 		"DOCKER_HOST_IP":       "",
-	}, func() {
-		cli.setup()
-		if os.Getenv("COMPOSE_PROJECT_NAME") != cli.Config.ProjectName {
-			t.Error("it should set COMPOSE_PROJECT_NAME")
-		}
-		if os.Getenv("DOCKER_HOST_IP") != cli.Context.IP {
-			t.Error("it should set DOCKER_HOST_IP")
-		}
 	})
+	defer reset()
+
+	cli.setup()
+	if os.Getenv("COMPOSE_PROJECT_NAME") != cli.Config.ProjectName {
+		t.Error("it should set COMPOSE_PROJECT_NAME")
+	}
+	if os.Getenv("DOCKER_HOST_IP") != cli.Context.IP {
+		t.Error("it should set DOCKER_HOST_IP")
+	}
 }
 
 func TestCLI_substituteCommand(t *testing.T) {
@@ -139,17 +140,15 @@ func TestCLI_ExecVersion(t *testing.T) {
 	}
 }
 
-func setTestEnvs(kv map[string]string, block func()) {
+func setTestEnvs(kv map[string]string) func() {
 	original := make(map[string]string)
 	for k, v := range kv {
 		original[k] = os.Getenv(k)
 		os.Setenv(k, v)
 	}
-	defer func() {
+	return func() {
 		for k := range kv {
 			os.Setenv(k, original[k])
 		}
-	}()
-
-	block()
+	}
 }
