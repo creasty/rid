@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -117,6 +119,24 @@ func TestCLI_substituteCommand(t *testing.T) {
 			t.Fatal("it should subsitute to .sub-help")
 		}
 	})
+}
+
+func TestCLI_ExecVersion(t *testing.T) {
+	stdout := new(bytes.Buffer)
+
+	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
+	cli.Stdout = stdout
+
+	if err := cli.ExecVersion(); err != nil {
+		t.Fatalf("it should not return error: %v", err)
+	}
+
+	if !strings.Contains(stdout.String(), Version) {
+		t.Error("it should print a version")
+	}
+	if !strings.Contains(stdout.String(), Revision) {
+		t.Error("it should print a revision")
+	}
 }
 
 func setTestEnvs(kv map[string]string, block func()) {
