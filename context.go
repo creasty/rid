@@ -13,9 +13,9 @@ const (
 	libexecDirName = "libexec"
 )
 
-// Substitution represents a custom sub-command
-type Substitution struct {
-	Command        string
+// Command represents a custom sub-command
+type Command struct {
+	Name           string
 	Summary        string
 	Description    string
 	RunInContainer bool
@@ -24,19 +24,19 @@ type Substitution struct {
 
 // Context represents a world where the command is executed
 type Context struct {
-	RootDir      string
-	BaseDir      string
-	ConfigFile   string
-	Substitution map[string]*Substitution
-	IP           string
+	RootDir    string
+	BaseDir    string
+	ConfigFile string
+	Command    map[string]*Command
+	IP         string
 }
 
 // NewContext retrieves contextual information for a working directory, and creates a Context instance
 func NewContext(path string) (*Context, error) {
 	c := &Context{
-		Substitution: map[string]*Substitution{
+		Command: map[string]*Command{
 			"compose": {
-				Command: "docker-compose",
+				Name:    "docker-compose",
 				Summary: "Execute docker-compose",
 			},
 		},
@@ -85,8 +85,8 @@ func (c *Context) findSubstitutions() error {
 			if !wrapper {
 				f, _ = filepath.Rel(c.RootDir, f)
 			}
-			c.Substitution[name] = &Substitution{
-				Command:        f,
+			c.Command[name] = &Command{
+				Name:           f,
 				RunInContainer: !wrapper,
 			}
 			continue
@@ -99,7 +99,7 @@ func (c *Context) findSubstitutions() error {
 
 	for name, file := range help {
 		name, _ = removePrefix("rid-", name)
-		if e, ok := c.Substitution[name]; ok {
+		if e, ok := c.Command[name]; ok {
 			e.HelpFile = file
 		}
 	}

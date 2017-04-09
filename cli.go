@@ -23,7 +23,7 @@ Options:
         --debug    Debug context and configuration
 
 Commands:
-{{- range $name, $sub := .Substitution }}
+{{- range $name, $sub := .Command }}
     {{ printf $.NameFormat $name }}{{ if ne $sub.Summary "" }} # {{ $sub.Summary }}{{ end }}
 {{- end }}
 `
@@ -88,14 +88,14 @@ func (c *CLI) substituteCommand() {
 		return
 	}
 
-	if s, ok := c.Context.Substitution[c.Args[0]]; ok {
-		c.Args[0] = s.Command
-		c.RunInContainer = s.RunInContainer
+	if cmd, ok := c.Context.Command[c.Args[0]]; ok {
+		c.Args[0] = cmd.Name
+		c.RunInContainer = cmd.RunInContainer
 
-		if s.HelpFile != "" && len(c.Args) > 1 {
+		if cmd.HelpFile != "" && len(c.Args) > 1 {
 			switch c.Args[1] {
 			case "-h", "--help":
-				c.Args = []string{".sub-help", s.HelpFile}
+				c.Args = []string{".sub-help", cmd.HelpFile}
 			}
 		}
 	}
@@ -144,24 +144,24 @@ func (c *CLI) ExecDebug() error {
 // ExecHelp shows help contents
 func (c *CLI) ExecHelp() error {
 	maxNameLen := 0
-	for name := range c.Context.Substitution {
+	for name := range c.Context.Command {
 		if l := len(name); l > maxNameLen {
 			maxNameLen = l
 		}
 	}
 
-	for _, s := range c.Context.Substitution {
-		if s.HelpFile == "" {
+	for _, cmd := range c.Context.Command {
+		if cmd.HelpFile == "" {
 			continue
 		}
-		s.Summary, _ = loadHelpFile(s.HelpFile)
+		cmd.Summary, _ = loadHelpFile(cmd.HelpFile)
 	}
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
 	return tmpl.Execute(c.Stderr, map[string]interface{}{
-		"Substitution": c.Context.Substitution,
-		"NameFormat":   fmt.Sprintf("%%-%ds", maxNameLen+1),
-		"Name":         "rid",
+		"Command":    c.Context.Command,
+		"NameFormat": fmt.Sprintf("%%-%ds", maxNameLen+1),
+		"Name":       "rid",
 	})
 }
 

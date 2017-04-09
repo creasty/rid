@@ -47,14 +47,14 @@ func TestCLI_setup(t *testing.T) {
 
 func TestCLI_substituteCommand(t *testing.T) {
 	cli := NewCLI(&Context{
-		Substitution: map[string]*Substitution{
+		Command: map[string]*Command{
 			"host": {
-				Command:        "script/host",
+				Name:           "script/host",
 				RunInContainer: false,
 				HelpFile:       "/path/to/help.txt",
 			},
 			"container": {
-				Command:        "script/container",
+				Name:           "script/container",
 				RunInContainer: true,
 			},
 		},
@@ -106,14 +106,14 @@ func TestCLI_substituteCommand(t *testing.T) {
 		cli.Args = []string{"host", "-h"}
 		cli.substituteCommand()
 
-		if !reflect.DeepEqual(cli.Args, []string{".sub-help", cli.Context.Substitution["host"].HelpFile}) {
+		if !reflect.DeepEqual(cli.Args, []string{".sub-help", cli.Context.Command["host"].HelpFile}) {
 			t.Fatal("it should subsitute to .sub-help")
 		}
 
 		cli.Args = []string{"host", "--help"}
 		cli.substituteCommand()
 
-		if !reflect.DeepEqual(cli.Args, []string{".sub-help", cli.Context.Substitution["host"].HelpFile}) {
+		if !reflect.DeepEqual(cli.Args, []string{".sub-help", cli.Context.Command["host"].HelpFile}) {
 			t.Fatal("it should subsitute to .sub-help")
 		}
 	})
