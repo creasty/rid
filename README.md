@@ -5,6 +5,7 @@ rid (run-in-docker)
 ===================
 
 [![Build Status](https://travis-ci.org/creasty/rid.svg?branch=master)](https://travis-ci.org/creasty/rid)
+[![codecov](https://codecov.io/gh/creasty/rid/branch/master/graph/badge.svg)](https://codecov.io/gh/creasty/rid)
 [![GitHub release](https://img.shields.io/github/release/creasty/rid.svg)](https://github.com/creasty/rid/releases)
 [![License](https://img.shields.io/github/license/creasty/rid.svg)](./LICENSE)
 
