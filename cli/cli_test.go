@@ -92,7 +92,7 @@ func TestCLI_parseEnvs(t *testing.T) {
 
 func TestCLI_substituteCommand(t *testing.T) {
 	cli := NewCLI(&project.Context{
-		Command: map[string]*Command{
+		Command: map[string]*project.Command{
 			"host": {
 				Name:           "script/host",
 				RunInContainer: false,
@@ -192,10 +192,10 @@ func TestCLI_ExecDebug(t *testing.T) {
 		t.Fatalf("it should not return error: %v", err)
 	}
 
-	if !strings.Contains(stdout.String(), "&cli.Context{") {
+	if !strings.Contains(stdout.String(), "&project.Context{") {
 		t.Error("it should dump a Context object")
 	}
-	if !strings.Contains(stdout.String(), "&cli.Config{") {
+	if !strings.Contains(stdout.String(), "&project.Config{") {
 		t.Error("it should dump a Config object")
 	}
 }
@@ -204,7 +204,7 @@ func TestCLI_ExecHelp(t *testing.T) {
 	stderr := new(bytes.Buffer)
 
 	cli := NewCLI(&project.Context{
-		Command: map[string]*Command{
+		Command: map[string]*project.Command{
 			"foobar": {
 				Name: "script/foobar",
 			},

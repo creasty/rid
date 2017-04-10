@@ -15,15 +15,6 @@ const (
 	libexecDirName = "libexec"
 )
 
-// Command represents a custom sub-command
-type Command struct {
-	Name           string
-	Summary        string
-	Description    string
-	RunInContainer bool
-	HelpFile       string
-}
-
 // Context represents a world where the command is executed
 type Context struct {
 	RootDir    string
