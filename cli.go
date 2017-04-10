@@ -144,12 +144,17 @@ func (c *CLI) runDockerExec(name string, args ...string) error {
 		return err
 	}
 
-	args = append([]string{
-		"exec",
-		"-it",
-		cid,
-		name,
-	}, args...)
+	dockerArgs := []string{"exec", "-it"}
+	{
+		for _, e := range c.Envs {
+			dockerArgs = append(dockerArgs, "-e", e)
+		}
+
+		dockerArgs = append(dockerArgs, cid)
+	}
+
+	args = append([]string{name}, args...)
+	args = append(dockerArgs, args...)
 
 	return c.run("docker", args...)
 }
