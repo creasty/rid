@@ -73,7 +73,7 @@ func (c *CLI) Run() error {
 	}
 
 	if c.RunInContainer {
-		return c.runInContainer(c.Args[0], c.Args[1:]...)
+		return c.runDockerExec(c.Args[0], c.Args[1:]...)
 	}
 
 	return c.run(c.Args[0], c.Args[1:]...)
@@ -116,7 +116,7 @@ func (c *CLI) run(name string, args ...string) error {
 	return cmd.Run()
 }
 
-func (c *CLI) runInContainer(name string, args ...string) error {
+func (c *CLI) runDockerExec(name string, args ...string) error {
 	if err := c.run("docker-compose", "up", "-d", "--remove-orphans"); err != nil {
 		return err
 	}
