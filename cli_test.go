@@ -54,6 +54,40 @@ func TestCLI_setup(t *testing.T) {
 	}
 }
 
+func TestCLI_parseEnvs(t *testing.T) {
+	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
+
+	t.Run("no envs", func(t *testing.T) {
+		cli.Args = []string{"foo", "bar"}
+		cli.parseEnvs()
+
+		if !reflect.DeepEqual(cli.Args, []string{"foo", "bar"}) {
+			t.Error("it should not alternate args")
+		}
+	})
+
+	t.Run("envs after command", func(t *testing.T) {
+		cli.Args = []string{"foo", "bar", "AAA=123"}
+		cli.parseEnvs()
+
+		if !reflect.DeepEqual(cli.Args, []string{"foo", "bar", "AAA=123"}) {
+			t.Error("it should not alternate args")
+		}
+	})
+
+	t.Run("envs before command", func(t *testing.T) {
+		cli.Args = []string{"AAA=123", "BBB=456", "foo", "bar"}
+		cli.parseEnvs()
+
+		if !reflect.DeepEqual(cli.Args, []string{"foo", "bar"}) {
+			t.Error("it should omit env args")
+		}
+		if !reflect.DeepEqual(cli.Envs, []string{"AAA=123", "BBB=456"}) {
+			t.Error("it should parse envs")
+		}
+	})
+}
+
 func TestCLI_substituteCommand(t *testing.T) {
 	cli := NewCLI(&Context{
 		Command: map[string]*Command{

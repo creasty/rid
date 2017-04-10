@@ -6,9 +6,8 @@ NAME     := rid
 VERSION  := 0.0.1
 REVISION := $(shell git rev-parse --short HEAD)
 
-GO_BUILD_FLAGS   := -v -ldflags="-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\" -extldflags \"-static\""
-GO_TEST_FLAGS    := -v
-GO_CI_TEST_FLAGS := -v -race -coverprofile=coverage.txt -covermode=atomic
+GO_BUILD_FLAGS := -v -ldflags="-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\" -extldflags \"-static\""
+GO_TEST_FLAGS  := -v
 
 PACKAGE_DIRS := $(shell go list ./... 2> /dev/null | grep -v /vendor/)
 SRC_FILES    := $(shell find . -name '*.go' -not -path './vendor/*')
@@ -50,7 +49,15 @@ test: lint
 
 .PHONY: ci-test
 ci-test: lint
-	@go test $(GO_CI_TEST_FLAGS) $(PACKAGE_DIRS)
+	@go test  $(PACKAGE_DIRS)
+	@echo > coverage.txt
+	@for d in $(PACKAGE_DIRS); do \
+		go test -coverprofile=profile.out -covermode=atomic -race -v $$d; \
+		if [ -f profile.out ]; then \
+			cat profile.out >> coverage.txt; \
+			rm profile.out; \
+		fi; \
+	done
 
 .PHONY: release
 release:
