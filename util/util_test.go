@@ -34,7 +34,7 @@ func TestRemovePrefix(t *testing.T) {
 }
 
 func TestLoadHelpFile(t *testing.T) {
-	summary, description := LoadHelpFile("./testdata/help.txt")
+	summary, description := LoadHelpFile("../testdata/help.txt")
 
 	if summary != "Summary line" {
 		t.Fatal("a summary line should be parsed")

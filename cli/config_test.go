@@ -7,14 +7,14 @@ import (
 
 func TestNewConfig(t *testing.T) {
 	t.Run("invalid config", func(t *testing.T) {
-		_, err := NewConfig("./testdata/config_invalid.yml")
+		_, err := NewConfig("../testdata/config_invalid.yml")
 		if err == nil || !strings.Contains(err.Error(), "ProjectName") {
 			t.Fatal("it should validate a presence of ProjectName")
 		}
 	})
 
 	t.Run("regular config", func(t *testing.T) {
-		c, err := NewConfig("./testdata/config_valid.yml")
+		c, err := NewConfig("../testdata/config_valid.yml")
 		if err != nil {
 			t.Fatal("it should be valid")
 		}
@@ -29,7 +29,7 @@ func TestNewConfig(t *testing.T) {
 	})
 
 	t.Run("custom config", func(t *testing.T) {
-		c, err := NewConfig("./testdata/config_custom.yml")
+		c, err := NewConfig("../testdata/config_custom.yml")
 		if err != nil {
 			t.Fatal("it should be valid")
 		}

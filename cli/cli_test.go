@@ -190,10 +190,10 @@ func TestCLI_ExecDebug(t *testing.T) {
 		t.Fatalf("it should not return error: %v", err)
 	}
 
-	if !strings.Contains(stdout.String(), "&main.Context{") {
+	if !strings.Contains(stdout.String(), "&cli.Context{") {
 		t.Error("it should dump a Context object")
 	}
-	if !strings.Contains(stdout.String(), "&main.Config{") {
+	if !strings.Contains(stdout.String(), "&cli.Config{") {
 		t.Error("it should dump a Config object")
 	}
 }
@@ -223,7 +223,7 @@ func TestCLI_ExecSubHelp(t *testing.T) {
 	stderr := new(bytes.Buffer)
 
 	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
-	cli.Args = []string{".sub-help", "./rid/libexec/rid-sample.txt"}
+	cli.Args = []string{".sub-help", "../rid/libexec/rid-sample.txt"}
 	cli.Stderr = stderr
 
 	if err := cli.ExecHelp(); err != nil {
