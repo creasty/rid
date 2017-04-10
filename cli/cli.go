@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"fmt"
@@ -11,6 +11,8 @@ import (
 	"github.com/k0kubun/pp"
 
 	"github.com/creasty/rid/docker"
+	"github.com/creasty/rid/project"
+	"github.com/creasty/rid/util"
 )
 
 const helpTemplate = `Execute commands via docker-compose
@@ -33,8 +35,8 @@ Commands:
 
 // CLI is an object holding states
 type CLI struct {
-	Context        *Context
-	Config         *Config
+	Context        *project.Context
+	Config         *project.Config
 	Args           []string
 	Envs           []string
 	RunInContainer bool
@@ -45,7 +47,7 @@ type CLI struct {
 }
 
 // NewCLI creates a new CLI instance
-func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
+func NewCLI(ctx *project.Context, cfg *project.Config, args []string) *CLI {
 	return &CLI{
 		Context:        ctx,
 		Config:         cfg,
@@ -185,7 +187,7 @@ func (c *CLI) ExecHelp() error {
 		if cmd.HelpFile == "" {
 			continue
 		}
-		cmd.Summary, _ = loadHelpFile(cmd.HelpFile)
+		cmd.Summary, _ = util.LoadHelpFile(cmd.HelpFile)
 	}
 
 	tmpl := template.Must(template.New("help").Parse(helpTemplate))
@@ -198,7 +200,7 @@ func (c *CLI) ExecHelp() error {
 
 // ExecSubHelp shows help contents for a custom sub-command
 func (c *CLI) ExecSubHelp() error {
-	_, description := loadHelpFile(c.Args[1])
+	_, description := util.LoadHelpFile(c.Args[1])
 	fmt.Fprint(c.Stderr, description)
 	return nil
 }

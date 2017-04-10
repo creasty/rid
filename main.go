@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+
+	"github.com/creasty/rid/cli"
+	"github.com/creasty/rid/project"
 )
 
 func main() {
@@ -12,18 +15,18 @@ func main() {
 		exit(err)
 	}
 
-	ctx, err := NewContext(wd)
+	ctx, err := project.NewContext(wd)
 	if err != nil {
 		exit(err)
 	}
 
-	cfg, err := NewConfig(ctx.ConfigFile)
+	cfg, err := project.NewConfig(ctx.ConfigFile)
 	if err != nil {
 		exit(err)
 	}
 
-	cli := NewCLI(ctx, cfg, os.Args)
-	if err := cli.Run(); err != nil {
+	c := cli.NewCLI(ctx, cfg, os.Args)
+	if err := c.Run(); err != nil {
 		exit(err)
 	}
 }

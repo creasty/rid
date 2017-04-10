@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"bytes"
@@ -8,6 +8,8 @@ import (
 	"testing"
 
 	"github.com/k0kubun/pp"
+
+	"github.com/creasty/rid/project"
 )
 
 func init() {
@@ -15,7 +17,7 @@ func init() {
 }
 
 func TestNewCLI(t *testing.T) {
-	cli := NewCLI(&Context{}, &Config{}, []string{"rid", "foo", "bar"})
+	cli := NewCLI(&project.Context{}, &project.Config{}, []string{"rid", "foo", "bar"})
 
 	if !reflect.DeepEqual(cli.Args, []string{"foo", "bar"}) {
 		t.Error("it should drop the first argument")
@@ -33,9 +35,9 @@ func TestNewCLI(t *testing.T) {
 }
 
 func TestCLI_setup(t *testing.T) {
-	cli := NewCLI(&Context{
+	cli := NewCLI(&project.Context{
 		IP: "192.168.0.1",
-	}, &Config{
+	}, &project.Config{
 		ProjectName: "myproject",
 	}, []string{"rid"})
 
@@ -55,7 +57,7 @@ func TestCLI_setup(t *testing.T) {
 }
 
 func TestCLI_parseEnvs(t *testing.T) {
-	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
+	cli := NewCLI(&project.Context{}, &project.Config{}, []string{"rid"})
 
 	t.Run("no envs", func(t *testing.T) {
 		cli.Args = []string{"foo", "bar"}
@@ -89,8 +91,8 @@ func TestCLI_parseEnvs(t *testing.T) {
 }
 
 func TestCLI_substituteCommand(t *testing.T) {
-	cli := NewCLI(&Context{
-		Command: map[string]*Command{
+	cli := NewCLI(&project.Context{
+		Command: map[string]*project.Command{
 			"host": {
 				Name:           "script/host",
 				RunInContainer: false,
@@ -101,7 +103,7 @@ func TestCLI_substituteCommand(t *testing.T) {
 				RunInContainer: true,
 			},
 		},
-	}, &Config{}, []string{"rid"})
+	}, &project.Config{}, []string{"rid"})
 
 	t.Run("no args", func(t *testing.T) {
 		cli.Args = []string{}
@@ -165,7 +167,7 @@ func TestCLI_substituteCommand(t *testing.T) {
 func TestCLI_ExecVersion(t *testing.T) {
 	stdout := new(bytes.Buffer)
 
-	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
+	cli := NewCLI(&project.Context{}, &project.Config{}, []string{"rid"})
 	cli.Stdout = stdout
 
 	if err := cli.ExecVersion(); err != nil {
@@ -183,17 +185,17 @@ func TestCLI_ExecVersion(t *testing.T) {
 func TestCLI_ExecDebug(t *testing.T) {
 	stdout := new(bytes.Buffer)
 
-	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
+	cli := NewCLI(&project.Context{}, &project.Config{}, []string{"rid"})
 	cli.Stdout = stdout
 
 	if err := cli.ExecDebug(); err != nil {
 		t.Fatalf("it should not return error: %v", err)
 	}
 
-	if !strings.Contains(stdout.String(), "&main.Context{") {
+	if !strings.Contains(stdout.String(), "&project.Context{") {
 		t.Error("it should dump a Context object")
 	}
-	if !strings.Contains(stdout.String(), "&main.Config{") {
+	if !strings.Contains(stdout.String(), "&project.Config{") {
 		t.Error("it should dump a Config object")
 	}
 }
@@ -201,13 +203,13 @@ func TestCLI_ExecDebug(t *testing.T) {
 func TestCLI_ExecHelp(t *testing.T) {
 	stderr := new(bytes.Buffer)
 
-	cli := NewCLI(&Context{
-		Command: map[string]*Command{
+	cli := NewCLI(&project.Context{
+		Command: map[string]*project.Command{
 			"foobar": {
 				Name: "script/foobar",
 			},
 		},
-	}, &Config{}, []string{"rid"})
+	}, &project.Config{}, []string{"rid"})
 	cli.Stderr = stderr
 
 	if err := cli.ExecHelp(); err != nil {
@@ -222,8 +224,8 @@ func TestCLI_ExecHelp(t *testing.T) {
 func TestCLI_ExecSubHelp(t *testing.T) {
 	stderr := new(bytes.Buffer)
 
-	cli := NewCLI(&Context{}, &Config{}, []string{"rid"})
-	cli.Args = []string{".sub-help", "./rid/libexec/rid-sample.txt"}
+	cli := NewCLI(&project.Context{}, &project.Config{}, []string{"rid"})
+	cli.Args = []string{".sub-help", "../rid/libexec/rid-sample.txt"}
 	cli.Stderr = stderr
 
 	if err := cli.ExecHelp(); err != nil {

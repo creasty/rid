@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"strings"
@@ -6,14 +6,14 @@ import (
 )
 
 func TestGetLocalIP(t *testing.T) {
-	if getLocalIP() == "" {
+	if GetLocalIP() == "" {
 		t.Fatal("it should retrieve a local IP")
 	}
 }
 
 func TestRemovePrefix(t *testing.T) {
 	t.Run("without prefix", func(t *testing.T) {
-		str, ok := removePrefix("prefix-", "aaa-foo")
+		str, ok := RemovePrefix("prefix-", "aaa-foo")
 		if ok {
 			t.Fatal("it should return false")
 		}
@@ -23,7 +23,7 @@ func TestRemovePrefix(t *testing.T) {
 	})
 
 	t.Run("with prefix", func(t *testing.T) {
-		str, ok := removePrefix("prefix-", "prefix-foo")
+		str, ok := RemovePrefix("prefix-", "prefix-foo")
 		if !ok {
 			t.Fatal("it should return true")
 		}
@@ -34,7 +34,7 @@ func TestRemovePrefix(t *testing.T) {
 }
 
 func TestLoadHelpFile(t *testing.T) {
-	summary, description := loadHelpFile("./testdata/help.txt")
+	summary, description := LoadHelpFile("../testdata/help.txt")
 
 	if summary != "Summary line" {
 		t.Fatal("a summary line should be parsed")

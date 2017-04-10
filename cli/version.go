@@ -1,4 +1,4 @@
-package main
+package cli
 
 var (
 	// Version represents a version number in the form of major.minor.path
