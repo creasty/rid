@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strings"
 	"text/template"
 
 	"github.com/k0kubun/pp"
@@ -35,6 +36,7 @@ type CLI struct {
 	Context        *Context
 	Config         *Config
 	Args           []string
+	Envs           []string
 	RunInContainer bool
 
 	Stdin  io.Reader
@@ -48,6 +50,7 @@ func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
 		Context:        ctx,
 		Config:         cfg,
 		Args:           args[1:],
+		Envs:           make([]string, 0),
 		RunInContainer: true,
 
 		Stdin:  os.Stdin,
@@ -59,6 +62,7 @@ func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
 // Run executes commands
 func (c *CLI) Run() error {
 	c.setup()
+	c.parseEnvs()
 	c.substituteCommand()
 
 	switch c.Args[0] {
@@ -82,6 +86,20 @@ func (c *CLI) Run() error {
 func (c *CLI) setup() {
 	os.Setenv("COMPOSE_PROJECT_NAME", c.Config.ProjectName)
 	os.Setenv("DOCKER_HOST_IP", c.Context.IP)
+}
+
+func (c *CLI) parseEnvs() {
+	i := 0
+	for _, a := range c.Args {
+		if strings.Contains(a, "=") {
+			c.Envs = append(c.Envs, a)
+		} else {
+			break
+		}
+		i++
+	}
+
+	c.Args = c.Args[i:]
 }
 
 func (c *CLI) substituteCommand() {
