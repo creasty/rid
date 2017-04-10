@@ -10,7 +10,10 @@ import (
 )
 
 const (
-	dockerInspectFormatter = `{{ .ID }} {{ index .Config.Labels "com.docker.compose.project" }}:{{ index .Config.Labels "com.docker.compose.service" }}:{{ index .Config.Labels "com.docker.compose.container-number" }}`
+	dockerInspectFormatter = `{{ .ID }}` +
+		` {{ index .Config.Labels "com.docker.compose.project" }}` +
+		`:{{ index .Config.Labels "com.docker.compose.service" }}` +
+		`:{{ index .Config.Labels "com.docker.compose.container-number" }}`
 )
 
 // FindContainerByService returns a container ID for service
