@@ -6,7 +6,7 @@ NAME     := rid
 VERSION  := 0.0.1
 REVISION := $(shell git rev-parse --short HEAD)
 
-GO_BUILD_FLAGS := -v -ldflags="-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\" -extldflags \"-static\""
+GO_BUILD_FLAGS := -v -ldflags="-s -w -X \"github.com/creasty/rid/cli.Version=$(VERSION)\" -X \"github.com/creasty/rid/cli.Revision=$(REVISION)\" -extldflags \"-static\""
 GO_TEST_FLAGS  := -v
 
 PACKAGE_DIRS := $(shell go list ./... 2> /dev/null | grep -v /vendor/)
