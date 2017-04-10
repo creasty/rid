@@ -11,6 +11,7 @@ import (
 	"github.com/k0kubun/pp"
 
 	"github.com/creasty/rid/docker"
+	"github.com/creasty/rid/project"
 	"github.com/creasty/rid/util"
 )
 
@@ -34,8 +35,8 @@ Commands:
 
 // CLI is an object holding states
 type CLI struct {
-	Context        *Context
-	Config         *Config
+	Context        *project.Context
+	Config         *project.Config
 	Args           []string
 	Envs           []string
 	RunInContainer bool
@@ -46,7 +47,7 @@ type CLI struct {
 }
 
 // NewCLI creates a new CLI instance
-func NewCLI(ctx *Context, cfg *Config, args []string) *CLI {
+func NewCLI(ctx *project.Context, cfg *project.Config, args []string) *CLI {
 	return &CLI{
 		Context:        ctx,
 		Config:         cfg,

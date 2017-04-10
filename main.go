@@ -6,6 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/creasty/rid/cli"
+	"github.com/creasty/rid/project"
 )
 
 func main() {
@@ -14,12 +15,12 @@ func main() {
 		exit(err)
 	}
 
-	ctx, err := cli.NewContext(wd)
+	ctx, err := project.NewContext(wd)
 	if err != nil {
 		exit(err)
 	}
 
-	cfg, err := cli.NewConfig(ctx.ConfigFile)
+	cfg, err := project.NewConfig(ctx.ConfigFile)
 	if err != nil {
 		exit(err)
 	}

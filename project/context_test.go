@@ -1,4 +1,4 @@
-package cli
+package project
 
 import (
 	"os"
@@ -47,7 +47,7 @@ func TestContext_findSubstitutions(t *testing.T) {
 		t.Fatalf("it should return an error: %v", err)
 	}
 
-	t.Run("non RIC command", func(t *testing.T) {
+	t.Run("host command", func(t *testing.T) {
 		cmd := c.Command["sample"]
 		if cmd.Name != filepath.Join(c.BaseDir, "libexec", "rid-sample") {
 			t.Fatal("it should be located")
@@ -57,7 +57,7 @@ func TestContext_findSubstitutions(t *testing.T) {
 		}
 	})
 
-	t.Run("RIC command", func(t *testing.T) {
+	t.Run("container command", func(t *testing.T) {
 		cmd := c.Command["sample2"]
 		if cmd.Name != filepath.Join("rid", "libexec", "sample2") {
 			t.Fatal("it should be located")
