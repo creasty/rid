@@ -8,6 +8,8 @@ import (
 	"text/template"
 
 	"github.com/k0kubun/pp"
+
+	"github.com/creasty/rid/docker"
 )
 
 const helpTemplate = `Execute commands via docker-compose
@@ -119,13 +121,19 @@ func (c *CLI) runInContainer(name string, args ...string) error {
 		return err
 	}
 
+	cid, err := docker.FindContainerByService(c.Config.ProjectName, c.Config.MainService, 1)
+	if err != nil {
+		return err
+	}
+
 	args = append([]string{
 		"exec",
-		c.Config.MainService,
+		"-it",
+		cid,
 		name,
 	}, args...)
 
-	return c.run("docker-compose", args...)
+	return c.run("docker", args...)
 }
 
 // ExecVersion prints version info
