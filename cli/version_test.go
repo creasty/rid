@@ -1,4 +1,4 @@
-package main
+package cli
 
 func init() {
 	Version = "0.0.0"

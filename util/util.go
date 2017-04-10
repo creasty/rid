@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"io/ioutil"
@@ -12,7 +12,8 @@ var (
 	newlinePattern = regexp.MustCompile("\r\n|\r|\n")
 )
 
-func getLocalIP() string {
+// GetLocalIP returns a local IP address
+func GetLocalIP() string {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return ""
@@ -37,12 +38,14 @@ func getLocalIP() string {
 	return ""
 }
 
-func removePrefix(prefix, str string) (string, bool) {
+// RemovePrefix trims prefix and returns true if there was a match
+func RemovePrefix(prefix, str string) (string, bool) {
 	had := strings.HasPrefix(str, prefix)
 	return strings.TrimPrefix(str, prefix), had
 }
 
-func loadHelpFile(file string) (summary, description string) {
+// LoadHelpFile loads and parses a help file
+func LoadHelpFile(file string) (summary, description string) {
 	f, err := os.Open(file)
 	if err != nil {
 		return

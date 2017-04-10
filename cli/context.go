@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"errors"
@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/creasty/rid/util"
 )
 
 const (
@@ -81,7 +83,7 @@ func (c *Context) findSubstitutions() error {
 		basename := filepath.Base(f)
 
 		if s, err := os.Stat(f); err == nil && (s.Mode()&0111) != 0 {
-			name, wrapper := removePrefix("rid-", basename)
+			name, wrapper := util.RemovePrefix("rid-", basename)
 			if !wrapper {
 				f, _ = filepath.Rel(c.RootDir, f)
 			}
@@ -98,7 +100,7 @@ func (c *Context) findSubstitutions() error {
 	}
 
 	for name, file := range help {
-		name, _ = removePrefix("rid-", name)
+		name, _ = util.RemovePrefix("rid-", name)
 		if e, ok := c.Command[name]; ok {
 			e.HelpFile = file
 		}
@@ -108,7 +110,7 @@ func (c *Context) findSubstitutions() error {
 }
 
 func (c *Context) getLocalIP() error {
-	c.IP = getLocalIP()
+	c.IP = util.GetLocalIP()
 	if c.IP == "" {
 		return errors.New("Failed to get a local IP address")
 	}
