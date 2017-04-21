@@ -49,7 +49,6 @@ test: lint
 
 .PHONY: ci-test
 ci-test: lint
-	@go test  $(PACKAGE_DIRS)
 	@echo > coverage.txt
 	@for d in $(PACKAGE_DIRS); do \
 		go test -coverprofile=profile.out -covermode=atomic -race -v $$d; \
