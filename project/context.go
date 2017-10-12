@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	globalRidDir   = "~/.rid"
 	configFileName = "rid/config.yml"
 	libexecDirName = "libexec"
 )
@@ -63,10 +64,15 @@ func (c *Context) findConfigFile(path string) error {
 }
 
 func (c *Context) findSubstitutions() error {
-	files, err := filepath.Glob(filepath.Join(c.BaseDir, libexecDirName, "*"))
-	if err != nil {
-		return err
+	globalFiles, globalFileErr := filepath.Glob(filepath.Join(globalRidDir, libexecDirName, "*"))
+	if globalFileErr != nil {
+		return globalFileErr
 	}
+	localFiles, localFileErr := filepath.Glob(filepath.Join(c.BaseDir, libexecDirName, "*"))
+	if localFileErr != nil {
+		return localFileErr
+	}
+	files := append(globalFiles, localFiles...)
 
 	help := make(map[string]string)
 
