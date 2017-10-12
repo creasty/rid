@@ -79,6 +79,9 @@ func (c *CLI) Run() error {
 	}
 
 	if c.RunInContainer {
+		if c.Config == nil {
+			return fmt.Errorf("Unable to locate a config file")
+		}
 		return c.runDockerExec(c.Args[0], c.Args[1:]...)
 	}
 

@@ -35,9 +35,7 @@ func NewContext(path string) (*Context, error) {
 			},
 		},
 	}
-	if err := c.findConfigFile(path); err != nil {
-		return nil, err
-	}
+	c.findConfigFile(path)
 	if err := c.getLocalIP(); err != nil {
 		return nil, err
 	}
