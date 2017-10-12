@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -11,9 +12,9 @@ import (
 )
 
 const (
-	globalRidDir   = "~/.rid"
-	configFileName = "rid/config.yml"
-	libexecDirName = "libexec"
+	globalRidDirName = ".rid"
+	configFileName   = "rid/config.yml"
+	libexecDirName   = "libexec"
 )
 
 // Context represents a world where the command is executed
@@ -62,7 +63,11 @@ func (c *Context) findConfigFile(path string) error {
 }
 
 func (c *Context) findSubstitutions() error {
-	globalFiles, globalFileErr := filepath.Glob(filepath.Join(globalRidDir, libexecDirName, "*"))
+	usr, err := user.Current()
+	if err != nil {
+		return err
+	}
+	globalFiles, globalFileErr := filepath.Glob(filepath.Join(usr.HomeDir, globalRidDirName, libexecDirName, "*"))
 	if globalFileErr != nil {
 		return globalFileErr
 	}
