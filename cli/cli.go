@@ -63,7 +63,6 @@ func NewCLI(ctx *project.Context, cfg *project.Config, args []string) *CLI {
 
 // Run executes commands
 func (c *CLI) Run() error {
-	c.setup()
 	c.parseEnvs()
 	c.substituteCommand()
 
@@ -82,6 +81,7 @@ func (c *CLI) Run() error {
 		if c.Config == nil {
 			return fmt.Errorf("Unable to locate a config file")
 		}
+		c.setup()
 		return c.runDockerExec(c.Args[0], c.Args[1:]...)
 	}
 
