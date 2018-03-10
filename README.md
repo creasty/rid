@@ -1,4 +1,4 @@
-![](https://cloud.githubusercontent.com/assets/1695538/24829859/002571a4-1cb5-11e7-8e1b-c9b04d171828.png)
+![](https://user-images.githubusercontent.com/1695538/37242202-ae2872d2-24a8-11e8-81f7-95caf8f77a77.png)
 
 
 rid (run-in-docker)
