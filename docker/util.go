@@ -9,15 +9,17 @@ import (
 )
 
 func init() {
-	if !doesAllowDashAndUnderscore() {
+	if doesAllowDashAndUnderscore() {
+		// https://github.com/docker/compose/blob/1.21.0/compose/cli/command.py#L132
+		projectNormalizePattern = regexp.MustCompile(`[^-_a-z0-9]`)
+	} else {
 		// https://github.com/docker/compose/blob/f55c9d42013e8fbb5285bc402d8248a846485217/compose/cli/command.py#L105
 		projectNormalizePattern = regexp.MustCompile(`[^a-z0-9]`)
 	}
 }
 
 var (
-	// https://github.com/docker/compose/blob/1.21.0/compose/cli/command.py#L132
-	projectNormalizePattern = regexp.MustCompile(`[^-_a-z0-9]`)
+	projectNormalizePattern *regexp.Regexp
 )
 
 // NormalizeProjectName normalizes a project name
