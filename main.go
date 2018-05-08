@@ -20,9 +20,12 @@ func main() {
 		exit(err)
 	}
 
-	cfg, err := project.NewConfig(ctx.ConfigFile)
-	if err != nil {
-		exit(err)
+	var cfg *project.Config
+	if ctx.ConfigFile != "" {
+		cfg, err = project.NewConfig(ctx.ConfigFile)
+		if err != nil {
+			exit(err)
+		}
 	}
 
 	c := cli.NewCLI(ctx, cfg, os.Args)
