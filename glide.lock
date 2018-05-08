@@ -1,5 +1,5 @@
-hash: 9548ac19310ba2eac3a3f3759b800baf4e4a358569c3707e578947da379d1950
-updated: 2017-03-24T03:08:28.383876272Z
+hash: 916a92cc6dbd2353883e8844c573506612d1015494ed94f0586e79b4bbca2f0b
+updated: 2018-05-08T15:54:13.189355055+09:00
 imports:
 - name: github.com/asaskevich/govalidator
   version: 7b3beb6df3c42abd3509abfc3bcacc0fbfb7c877
@@ -7,6 +7,8 @@ imports:
   version: 04f313413ffd65ce25f2541bfd2b2ceec5c0908c
 - name: github.com/k0kubun/pp
   version: 027a6d1765d673d337e687394dbe780dd64e2a1e
+- name: github.com/Masterminds/semver
+  version: c7af12943936e8c39859482e61f0574c2fd7fc75
 - name: github.com/mattn/go-colorable
   version: a392f450ea64cee2b268dfaacdc2502b50a22b18
 - name: github.com/mattn/go-isatty
