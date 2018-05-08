@@ -5,3 +5,5 @@ import:
 - package: github.com/ghodss/yaml
 - package: github.com/k0kubun/pp
   version: ^2.3.0
+- package: github.com/Masterminds/semver
+  version: ^1.4.2
