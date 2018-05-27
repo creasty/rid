@@ -4,6 +4,7 @@ package repository
 
 import (
 	"github.com/asaskevich/govalidator"
+	"github.com/creasty/defaults"
 	"github.com/go-yaml/yaml"
 	"github.com/pkg/errors"
 
@@ -41,6 +42,10 @@ func (r *configRepository) Get() (*model.Config, error) {
 
 	composeYaml, err := r.readComposeFile(rootInfo.ComposeFile)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := defaults.Set(composeYaml); err != nil {
 		return nil, err
 	}
 
