@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/Masterminds/semver"
+  packages = ["."]
+  revision = "c7af12943936e8c39859482e61f0574c2fd7fc75"
+  version = "v1.4.2"
+
+[[projects]]
   name = "github.com/asaskevich/govalidator"
   packages = ["."]
   revision = "ccb8e960c48f04d6935e72476ae4a51028f9e22f"
@@ -120,6 +126,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e6bdb04fa3fa641f8969a99a89e983ed7f11dce09a1110d488d6a4186e79cf96"
+  inputs-digest = "d19839fb2f3203383d481a2bbb472e555c5a7e641878df7f877c88c544fc8a3b"
   solver-name = "gps-cdcl"
   solver-version = 1
