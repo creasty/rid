@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -eu
-set -o pipefail
-
-[ -f ./bin/rid ] || rid make
-cp -f ./bin/rid /usr/local/bin/

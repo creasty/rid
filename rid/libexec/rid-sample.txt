@@ -1,4 +1,0 @@
-Print a greeting message on host
-
-Usage:
-    rid sample NAME

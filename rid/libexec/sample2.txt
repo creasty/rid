@@ -1,4 +1,0 @@
-Print OS info of conatiner
-
-Usage:
-    rid sample2

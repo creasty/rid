@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-set -eu
-set -o pipefail
-
-echo "Hello, $1. This is rid $(rid -v)"
