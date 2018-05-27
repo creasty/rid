@@ -20,5 +20,5 @@ required = [
   version = "9.0.0"
 
 [[constraint]]
-  name = "github.com/ghodss/yaml"
-  version = "1.0.0"
+  name = "github.com/go-yaml/yaml"
+  version = "2.2.1"
