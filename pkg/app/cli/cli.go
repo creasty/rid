@@ -9,7 +9,7 @@ import (
 
 // CLI is an interface for CLI
 type CLI interface {
-	Run() error
+	Run(args []string) error
 }
 
 // New creates a CLI
@@ -26,6 +26,8 @@ func New(
 		Stderr:     stderr,
 		Config:     config,
 		RunUsecase: runUsecase,
+		args:       make([]string, 0),
+		envs:       make([]string, 0),
 	}
 }
 
@@ -35,4 +37,6 @@ type cli struct {
 	Stderr     io.Writer
 	Config     *model.Config
 	RunUsecase usecase.RunUsecase
+	args       []string
+	envs       []string
 }

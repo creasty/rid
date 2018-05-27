@@ -23,7 +23,7 @@ func main() {
 		wd,
 		afero.NewOsFs(),
 	)
-	if err := c.CLI().Run(); err != nil {
+	if err := c.CLI().Run(os.Args[1:]); err != nil {
 		exit(err)
 	}
 }
