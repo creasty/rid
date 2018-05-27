@@ -77,7 +77,7 @@ func (r *configRepository) readComposeFile(path string) (*entity.ComposeYaml, er
 		return c, errors.Wrap(err, "unmarshal error")
 	}
 
-	delete(raw, "rid")
+	delete(raw, "x-rid")
 	c.Raw = raw
 
 	if _, err := govalidator.ValidateStruct(c); err != nil {

@@ -76,6 +76,6 @@ func Test_ConfigRepository_Get(t *testing.T) {
 		assert.NotNil(t, config)
 		assert.Equal(t, "sample", config.ProjectName)
 		assert.NotNil(t, config.ComposeYaml)
-		assert.Nil(t, config.ComposeYaml["rid"])
+		assert.Nil(t, config.ComposeYaml["x-rid"])
 	})
 }

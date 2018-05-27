@@ -1,6 +1,6 @@
 version: '3'
 
-rid:
+x-rid:
   project_name: creasty/rid
 
 services:
