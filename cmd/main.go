@@ -5,7 +5,9 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/creasty/rid/pkg/app"
+	"github.com/spf13/afero"
+
+	"github.com/creasty/rid/pkg/app/cli"
 )
 
 func main() {

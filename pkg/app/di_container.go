@@ -2,7 +2,6 @@ package app
 
 import (
 	"io"
-	"os"
 	"sync"
 
 	"github.com/spf13/afero"

@@ -32,7 +32,7 @@ func newConfigRepositoryTestContext(t *testing.T) *configRepositoryTestContext {
 		ctrl:       ctrl,
 		fs:         fileSystem,
 		workingDir: workingDir,
-		repo:       NewConfigRepository(workingDir, fileSystem),
+		repo:       NewConfigRepository(fileSystem, workingDir),
 	}
 }
 
