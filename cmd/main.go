@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+
+	"github.com/creasty/rid/pkg/app"
 )
 
 func main() {
@@ -12,6 +14,8 @@ func main() {
 		exit(err)
 	}
 
+	c := app.NewDIContainer(wd)
+	c.RunUsecase().Run()
 	println("hello: " + wd)
 }
 

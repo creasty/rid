@@ -50,6 +50,9 @@ func (r *configRepository) Get() (*model.Config, error) {
 	}
 
 	c := &model.Config{}
+	c.RootDir = rootInfo.RootDir
+	c.RidDir = rootInfo.RidDir
+	c.ComposeFile = rootInfo.ComposeFile
 	c.ProjectName = composeYaml.Rid.ProjectName
 	c.MainService = composeYaml.Rid.MainService
 	c.ComposeYaml = composeYaml.Raw
