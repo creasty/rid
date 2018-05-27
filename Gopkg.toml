@@ -1,6 +1,7 @@
 required = [
   "github.com/golang/mock/mockgen",
   "github.com/mitchellh/gox",
+  "github.com/k0kubun/pp",
 ]
 
 [prune]
