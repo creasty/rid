@@ -44,6 +44,11 @@ func New(fs afero.Fs) FileSystem {
 	}
 }
 
+// NewTest creates a file system instance for testing
+func NewTest() FileSystem {
+	return New(afero.NewMemMapFs())
+}
+
 type fileSystem struct {
 	afero.Afero
 }
