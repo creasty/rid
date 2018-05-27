@@ -1,0 +1,24 @@
+version: '3'
+
+rid:
+  project_name: creasty/rid
+
+services:
+  app:
+    image: creasty/rid:dev
+    build: .
+    volumes:
+      - ..:/app
+      - vendor:/app/vendor
+      - dep_cache:/go/pkg/dep
+    volumes_from:
+      - volume
+    extra_hosts:
+      localhost: "${DOCKER_HOST_IP}"
+    environment:
+      - APP_DIR=/go/src/github.com/creasty/rid
+    command: tail -f /dev/null
+
+volumes:
+  vendor:
+  dep:
