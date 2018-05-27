@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"github.com/k0kubun/pp"
-
 	"github.com/creasty/rid/pkg/domain/model"
 	"github.com/creasty/rid/pkg/infra/docker"
 )
@@ -29,6 +27,5 @@ type runUsecase struct {
 }
 
 func (u *runUsecase) Run() error {
-	pp.Println(u.Config)
 	return nil
 }

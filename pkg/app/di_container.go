@@ -1,6 +1,7 @@
 package app
 
 import (
+	"io"
 	"os"
 	"sync"
 
@@ -18,20 +19,34 @@ type DIContainer interface {
 	FileSystem() fs.FileSystem
 	Docker() docker.Docker
 	ConfigRepository() repository.ConfigRepository
+	Config() *model.Config
 	RunUsecase() usecase.RunUsecase
 }
 
 // NewDIContainer creates a container
 func NewDIContainer(
+	stdin io.Reader,
+	stdout io.Writer,
+	stderr io.Writer,
 	workingDir string,
+	aferoFs afero.Fs,
 ) DIContainer {
 	return &diContainer{
+		Stdin:      stdin,
+		Stdout:     stdout,
+		Stderr:     stderr,
 		workingDir: workingDir,
+		AferoFs:    aferoFs,
 	}
 }
 
 type diContainer struct {
+	Stdin      io.Reader
+	Stdout     io.Writer
+	Stderr     io.Writer
 	workingDir string
+
+	AferoFs afero.Fs
 
 	fileSystemHolder fs.FileSystem
 	fileSystemOnce   sync.Once
@@ -42,27 +57,23 @@ type diContainer struct {
 
 func (c *diContainer) FileSystem() fs.FileSystem {
 	c.fileSystemOnce.Do(func() {
-		c.fileSystemHolder = fs.New(c.aferoFs())
+		c.fileSystemHolder = fs.New(c.AferoFs)
 	})
 	return c.fileSystemHolder
 }
 
-func (c *diContainer) aferoFs() afero.Fs {
-	return afero.NewOsFs()
-}
-
 func (c *diContainer) Docker() docker.Docker {
 	return docker.New(
-		os.Stdin,
-		os.Stdout,
-		os.Stderr,
+		c.Stdin,
+		c.Stdout,
+		c.Stderr,
 		c.Config().RootDir,
 		c.Config().RidDir,
 	)
 }
 
 func (c *diContainer) ConfigRepository() repository.ConfigRepository {
-	return repository.NewConfigRepository(c.workingDir, c.FileSystem())
+	return repository.NewConfigRepository(c.FileSystem(), c.workingDir)
 }
 
 func (c *diContainer) Config() *model.Config {

@@ -14,9 +14,16 @@ func main() {
 		exit(err)
 	}
 
-	c := app.NewDIContainer(wd)
-	c.RunUsecase().Run()
-	println("hello: " + wd)
+	c := cli.New(
+		os.Stdin,
+		os.Stdout,
+		os.Stderr,
+		wd,
+		afero.NewOsFs(),
+	)
+	if err := c.Run(); err != nil {
+		exit(err)
+	}
 }
 
 func exit(err error) {

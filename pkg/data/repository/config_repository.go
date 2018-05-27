@@ -1,4 +1,4 @@
-//go:generate mockgen -source=config.go -package repository -destination=config_mock.go
+//go:generate mockgen -source=config_repository.go -package repository -destination=config_repository_mock.go
 
 package repository
 
@@ -20,18 +20,18 @@ type ConfigRepository interface {
 
 // NewConfigRepository creates an instance of ConfigRepository
 func NewConfigRepository(
-	workingDir string,
 	fileSystem fs.FileSystem,
+	workingDir string,
 ) ConfigRepository {
 	return &configRepository{
+		FileSystem: fileSystem,
 		workingDir: workingDir,
-		fileSystem: fileSystem,
 	}
 }
 
 type configRepository struct {
+	FileSystem fs.FileSystem
 	workingDir string
-	fileSystem fs.FileSystem
 }
 
 func (r *configRepository) Get() (*model.Config, error) {
@@ -63,7 +63,7 @@ func (r *configRepository) Get() (*model.Config, error) {
 func (r *configRepository) readComposeFile(path string) (*entity.ComposeYaml, error) {
 	c := &entity.ComposeYaml{}
 
-	b, err := r.fileSystem.ReadFile(path)
+	b, err := r.FileSystem.ReadFile(path)
 	if err != nil {
 		return c, errors.Wrap(err, "io error")
 	}
@@ -88,7 +88,7 @@ func (r *configRepository) readComposeFile(path string) (*entity.ComposeYaml, er
 }
 
 func (r *configRepository) getRootInfo() (*fs.RootInfo, error) {
-	info, ok := r.fileSystem.LocateRoot(r.workingDir)
+	info, ok := r.FileSystem.LocateRoot(r.workingDir)
 	if !ok {
 		return nil, errors.New("Not a rid project (or any of the parent directories)")
 	}
