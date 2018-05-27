@@ -2,14 +2,27 @@
 
 
 [[projects]]
+  name = "github.com/asaskevich/govalidator"
+  packages = ["."]
+  revision = "ccb8e960c48f04d6935e72476ae4a51028f9e22f"
+  version = "v9"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/ghodss/yaml"
+  packages = ["."]
+  revision = "0ca9ea5df5451ffdf184b4428c902747c2c11cd7"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/golang/mock"
   packages = [
+    "gomock",
     "mockgen",
     "mockgen/model"
   ]
@@ -27,6 +40,12 @@
   name = "github.com/mitchellh/iochan"
   packages = ["."]
   revision = "87b45ffd0e9581375c491fef3d32130bb15c5bd7"
+
+[[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   name = "github.com/pmezard/go-difflib"
@@ -50,6 +69,12 @@
   version = "v1.2.1"
 
 [[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "dfa909b99c79129e1100513e5cd36307665e5723"
+
+[[projects]]
   name = "golang.org/x/text"
   packages = [
     "internal/gen",
@@ -62,9 +87,15 @@
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
 
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a8ffa446df130bc58941f9d61d1d7883b7602666ed4c7d3fc04ec89a1aff961e"
+  inputs-digest = "94bb2beb3722b70991587c740e74edfa479c27c983ba06eede25f5cdbce035e0"
   solver-name = "gps-cdcl"
   solver-version = 1
