@@ -1,0 +1,8 @@
+required = [
+  "github.com/golang/mock/mockgen",
+  "github.com/mitchellh/gox",
+]
+
+[prune]
+  go-tests = true
+  unused-packages = true

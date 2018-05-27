@@ -1,5 +1,5 @@
 language: go
-go:       1.7
+go:       1.10
 
 branches:
   only:
@@ -8,18 +8,21 @@ branches:
 
 env:
   global:
+    - DEP_VERSION=0.4.1
+
     # CODECOV_TOKEN
     - secure: "RVlGAb0nD4W0WJWMKRT+fKZ+Y+HOfHGXcY+4JGuHcwuacR4QGmyj+C6wP/4h1N1oH6JeNGt51m9ltaiLCn1ETEZi9uEukM9THqhjgJi2zf+v7x4UDtRaYEyQG4xWI5IlJ2h+TNXR3/fiYOFUcV4jUSgfiryW3ZDvNAK+eLURLmZplBZUt8+op0OgfgpOWi2/Vx4R1ZXj42XVjgqte1JJzEWdDEHMGsZyrKQZvRKiG2Nd69L8unhFkgpNdBakSO08ZSGOIIKtQqia3sZDVYzSh9ofJrSGi4/2BAWzhRqYxv34SO6kvQSBbK2ACDw3QMyYs5AqFZersgsZ9JzshAisajKcGrxmz4YGQrTYULE/GI352GbaLvVP1s9abuG77PDTOmsFbnmAEpFff3CaG3EKfvXB+MwLBXdEwDKHnXf4w2zBES4Kd6PSKcECCYRdrzj2xQ6GCjUKSzBLINgP7tlek++l0sv9T8x6utGDj/4dZp8AN2p+EHZx7aQL6338HxnnFV6u7CNWGqzxA6ih6Ar6jldH+PPLPXqAAo6isYTGxTY9SOJ2dOE70/vm6k0dKexonGxrxAUP6pBcVXRc/+W7dITq/usRnCScIBF3+TuQ50AzFpCw7icmkLLld6wM9iW/DNdbm7cbY/2nimgmN8DSnzOu1k5tJucPVdOFTzShGK0="
 
 cache:
   directories:
     - vendor
+    - $GOPATH/pkg/dep
 
 before_install:
-  - sudo add-apt-repository ppa:masterminds/glide -y
-  - sudo apt-get update -q
-  - sudo apt-get install glide -y
   - mkdir -p $GOPATH/bin
+  - |
+    curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 -o $GOPATH/bin/dep
+    chmod +x $GOPATH/bin/dep
   - go get -u github.com/golang/lint/golint
 
 install:
@@ -32,7 +35,6 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 before_deploy:
-  - make ci-build
   - make dist
 
 deploy:
@@ -41,6 +43,6 @@ deploy:
     secure: BwAA9NkX4RhBDYiMNsniOqvJuBtDGVa32byF0U2WP5p/DNvqURlNJPDmewrRFOICsF63EdJgNkYJY/wbFMUYKTKl2TUKLh+GpYoR+X12LZh03YWziy4V/RmDq91Rr7A8CYGgl5u1z1LIfDTmPJi+AtBzlhhZOTAtuGjUR1W05XDQ7Vm8yuvVb+Duj54v26DeCBHbENtp6VU3VQBLj/JxrLKkTdDEUgZvP3rB22sL24w0K3kAHQI5F7gUBRnzC/RoTKPMSd007AZSfbLETAAhhSO+haNxvjZm0zIaFAHAYpEnzgU21v4SXwSe0IvQ/XfD87Rw3HFUQzdzFhhDre6Ez22EM1C6ivL2xkQCP1UMqS3QQcfbuq+lxfQBPWO8dMBw802d6iYb4kEa1r2Ns9N7HIC7M2DYAXcCzPc2E8HuGXHDiyvzItmOzKa0QYlQ6UVGw/n8srkftwYjPeOmlVWWawdHL86wW+sl2R/xxUXO6zwbqWO/TGFOe7LWCZgrLprES1h/ZFExxzEcG0aor7p0BuODhsvwxgWoVd+AmE8q1Dnyv5CC3CwaMLgUFFMKnx16mWFKJEE8Ax+beW8zXVPWH1NaDs+ntK4iSfXXzrgkgA7yoZjkxdOTtXuIUTADErJXNtvE5DmPzHzkpl5YpFSo8diYdEXFQXKzrWNNTJBsxfc=
   skip_cleanup: true
   file_glob: true
-  file: 'dist/*.{tar.gz,zip}'
+  file: 'dist/*'
   on:
     tags: true
