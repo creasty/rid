@@ -70,15 +70,15 @@ func (_mr *MockDockerMockRecorder) FindContainer(arg0, arg1, arg2 interface{}) *
 }
 
 // Prepare mocks base method
-func (_m *MockDocker) Prepare() error {
-	ret := _m.ctrl.Call(_m, "Prepare")
+func (_m *MockDocker) Prepare(dir string) error {
+	ret := _m.ctrl.Call(_m, "Prepare", dir)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Prepare indicates an expected call of Prepare
-func (_mr *MockDockerMockRecorder) Prepare() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Prepare", reflect.TypeOf((*MockDocker)(nil).Prepare))
+func (_mr *MockDockerMockRecorder) Prepare(arg0 interface{}) *gomock.Call {
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Prepare", reflect.TypeOf((*MockDocker)(nil).Prepare), arg0)
 }
 
 // Exec mocks base method

@@ -15,8 +15,13 @@ func (d *docker) GetDockerComposeVersion() (string, error) {
 	return strings.TrimRight(string(data[:]), "\n"), nil
 }
 
-func (d *docker) Prepare() error {
-	return d.run("docker-compose", "up", "-d", "--remove-orphans")
+func (d *docker) Prepare(dir string) error {
+	cmd := exec.Command("docker-compose", "up", "-d", "--remove-orphans")
+	cmd.Dir = dir
+	cmd.Stdin = d.Stdin
+	cmd.Stdout = d.Stdout
+	cmd.Stderr = d.Stderr
+	return cmd.Run()
 }
 
 func (d *docker) Exec(cid string, envs []string, name string, args ...string) error {
@@ -32,5 +37,9 @@ func (d *docker) Exec(cid string, envs []string, name string, args ...string) er
 	args = append([]string{name}, args...)
 	args = append(dockerArgs, args...)
 
-	return d.run("docker", args...)
+	cmd := exec.Command("docker", args...)
+	cmd.Stdin = d.Stdin
+	cmd.Stdout = d.Stdout
+	cmd.Stderr = d.Stderr
+	return cmd.Run()
 }

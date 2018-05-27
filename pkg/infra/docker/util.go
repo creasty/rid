@@ -1,7 +1,6 @@
 package docker
 
 import (
-	"os/exec"
 	"regexp"
 	"strings"
 
@@ -51,17 +50,4 @@ func (d *docker) projectNormalizePattern() (pattern *regexp.Regexp) {
 
 	pattern = projectNormalizePatternOld
 	return
-}
-
-func (d *docker) run(name string, args ...string) error {
-	cmd := exec.Command(name, args...)
-	if name == "docker-compose" {
-		cmd.Dir = d.ridDir
-	} else {
-		cmd.Dir = d.rootDir
-	}
-	cmd.Stdin = d.Stdin
-	cmd.Stdout = d.Stdout
-	cmd.Stderr = d.Stderr
-	return cmd.Run()
 }

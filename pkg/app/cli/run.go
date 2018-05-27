@@ -5,8 +5,7 @@ import (
 )
 
 func (c *cli) Run() error {
-	u := c.container.RunUsecase()
-	u.Run()
-	pp.Println(c.container.Config())
+	c.RunUsecase.Run()
+	pp.Println(c.Config)
 	return nil
 }

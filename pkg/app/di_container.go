@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/afero"
 
+	"github.com/creasty/rid/pkg/app/cli"
 	"github.com/creasty/rid/pkg/data/repository"
 	"github.com/creasty/rid/pkg/domain/model"
 	"github.com/creasty/rid/pkg/domain/usecase"
@@ -20,6 +21,7 @@ type DIContainer interface {
 	ConfigRepository() repository.ConfigRepository
 	Config() *model.Config
 	RunUsecase() usecase.RunUsecase
+	CLI() cli.CLI
 }
 
 // NewDIContainer creates a container
@@ -66,8 +68,6 @@ func (c *diContainer) Docker() docker.Docker {
 		c.Stdin,
 		c.Stdout,
 		c.Stderr,
-		c.Config().RootDir,
-		c.Config().RidDir,
 	)
 }
 
@@ -89,4 +89,14 @@ func (c *diContainer) Config() *model.Config {
 
 func (c *diContainer) RunUsecase() usecase.RunUsecase {
 	return usecase.NewRunUsecase(c.Config(), c.Docker())
+}
+
+func (c *diContainer) CLI() cli.CLI {
+	return cli.New(
+		c.Stdin,
+		c.Stdout,
+		c.Stderr,
+		c.Config(),
+		c.RunUsecase(),
+	)
 }

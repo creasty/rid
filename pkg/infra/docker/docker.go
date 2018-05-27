@@ -18,7 +18,7 @@ type Docker interface {
 	FindContainer(projectName, service string, num int) (string, error)
 
 	// Prepare starts up containers as deamon.
-	Prepare() error
+	Prepare(dir string) error
 
 	// Exec executes the given command in the specified container ID.
 	// Extra environment variables can be passed in.
@@ -30,22 +30,16 @@ func New(
 	stdin io.Reader,
 	stdout io.Writer,
 	stderr io.Writer,
-	rootDir string,
-	ridDir string,
 ) Docker {
 	return &docker{
-		Stdin:   stdin,
-		Stdout:  stdout,
-		Stderr:  stderr,
-		rootDir: rootDir,
-		ridDir:  ridDir,
+		Stdin:  stdin,
+		Stdout: stdout,
+		Stderr: stderr,
 	}
 }
 
 type docker struct {
-	Stdin   io.Reader
-	Stdout  io.Writer
-	Stderr  io.Writer
-	rootDir string
-	ridDir  string
+	Stdin  io.Reader
+	Stdout io.Writer
+	Stderr io.Writer
 }

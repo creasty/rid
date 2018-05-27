@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/afero"
 
-	"github.com/creasty/rid/pkg/app/cli"
+	"github.com/creasty/rid/pkg/app"
 )
 
 func main() {
@@ -16,14 +16,14 @@ func main() {
 		exit(err)
 	}
 
-	c := cli.New(
+	c := app.NewDIContainer(
 		os.Stdin,
 		os.Stdout,
 		os.Stderr,
 		wd,
 		afero.NewOsFs(),
 	)
-	if err := c.Run(); err != nil {
+	if err := c.CLI().Run(); err != nil {
 		exit(err)
 	}
 }
