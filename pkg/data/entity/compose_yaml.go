@@ -10,4 +10,6 @@ type ComposeYaml struct {
 		// Default is "app"
 		MainService string `yaml:"main_service" default:"app"`
 	} `yaml:"rid" valid:"required"`
+
+	Raw Hash `yaml:"-"`
 }

@@ -39,7 +39,7 @@ func (r *configRepository) Get() (*model.Config, error) {
 		return nil, err
 	}
 
-	composeYaml, yamlData, err := r.readComposeFile(rootInfo.ComposeFile)
+	composeYaml, err := r.readComposeFile(rootInfo.ComposeFile)
 	if err != nil {
 		return nil, err
 	}
@@ -47,28 +47,36 @@ func (r *configRepository) Get() (*model.Config, error) {
 	c := &model.Config{}
 	c.ProjectName = composeYaml.Rid.ProjectName
 	c.MainService = composeYaml.Rid.MainService
-	c.ComposeYaml = yamlData
+	c.ComposeYaml = composeYaml.Raw
 
 	return c, nil
 }
 
-func (r *configRepository) readComposeFile(path string) (*entity.ComposeYaml, []byte, error) {
+func (r *configRepository) readComposeFile(path string) (*entity.ComposeYaml, error) {
 	c := &entity.ComposeYaml{}
 
 	b, err := r.fileSystem.ReadFile(path)
 	if err != nil {
-		return c, b, errors.Wrap(err, "io error")
+		return c, errors.Wrap(err, "io error")
 	}
 
 	if err := yaml.Unmarshal(b, c); err != nil {
-		return c, b, errors.Wrap(err, "unmarshal error")
+		return c, errors.Wrap(err, "unmarshal error")
 	}
+
+	raw := make(entity.Hash)
+	if err := yaml.Unmarshal(b, &raw); err != nil {
+		return c, errors.Wrap(err, "unmarshal error")
+	}
+
+	delete(raw, "rid")
+	c.Raw = raw
 
 	if _, err := govalidator.ValidateStruct(c); err != nil {
-		return c, b, errors.Wrap(err, "invalid")
+		return c, errors.Wrap(err, "invalid")
 	}
 
-	return c, b, nil
+	return c, nil
 }
 
 func (r *configRepository) getRootInfo() (*fs.RootInfo, error) {

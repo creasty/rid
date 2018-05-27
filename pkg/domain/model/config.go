@@ -1,5 +1,9 @@
 package model
 
+import (
+	"github.com/creasty/rid/pkg/data/entity"
+)
+
 // Config holds information of the current project
 type Config struct {
 	// ProjectName is used for docker-compose in order to distinguish projects in other locations.
@@ -9,5 +13,5 @@ type Config struct {
 	MainService string
 
 	// ComposeYaml is modified content of a docker-compose yaml file.
-	ComposeYaml []byte
+	ComposeYaml entity.Hash
 }

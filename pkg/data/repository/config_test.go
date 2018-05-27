@@ -41,6 +41,11 @@ func (c *configRepositoryTestContext) prepareFiles() {
 		"rid": entity.Hash{
 			"project_name": "sample",
 		},
+		"services": entity.Hash{
+			"app": entity.Hash{
+				"image": "sample/sample",
+			},
+		},
 	})
 
 	c.fs.MkdirAll(c.workingDir+"/rid", os.ModeDir)
@@ -49,7 +54,7 @@ func (c *configRepositoryTestContext) prepareFiles() {
 
 //=== Test
 //==============================================================================================
-func Test_ConfigRepository_getRootInfo(t *testing.T) {
+func Test_ConfigRepository_Get(t *testing.T) {
 	t.Run("no rid directory", func(t *testing.T) {
 		ctx := newConfigRepositoryTestContext(t)
 		defer ctx.ctrl.Finish()
@@ -70,5 +75,7 @@ func Test_ConfigRepository_getRootInfo(t *testing.T) {
 		}
 		assert.NotNil(t, config)
 		assert.Equal(t, "sample", config.ProjectName)
+		assert.NotNil(t, config.ComposeYaml)
+		assert.Nil(t, config.ComposeYaml["rid"])
 	})
 }
