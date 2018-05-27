@@ -55,7 +55,7 @@ $(foreach src,$(DEP_CMDS),$(eval $(call dep-bin-tmpl,$(src))))
 
 #  Bin
 #-----------------------------------------------
-$(BIN_DIR)/$(NAME): $(SRC_FILES)
+$(BIN_DIR)/$(NAME): $(SRC_FILES) gen
 	@go build \
 		$(GO_BUILD_FLAGS) \
 		-ldflags "$(GO_LDFLAGS)" \
@@ -74,7 +74,7 @@ dep: Gopkg.toml Gopkg.lock
 	@dep ensure -v
 
 .PHONY: gen
-gen:
+gen: $(SRC_FILES)
 	@PATH=$(DEP_BIN_PATH):$$PATH go generate ./...
 
 .PHONY: lint
@@ -84,11 +84,11 @@ lint:
 	@go vet $(PACKAGE_DIRS)
 
 .PHONY: test
-test: lint
+test: gen lint
 	@go test $(GO_TEST_FLAGS) ./...
 
 .PHONY: ci-test
-ci-test: lint
+ci-test: gen lint
 	@echo > coverage.txt
 	@go test $(GO_TEST_FLAGS) $(GO_COVER_FLAGS) ./...
 
@@ -98,7 +98,7 @@ release:
 	git push origin v$(VERSION)
 
 .PHONY: dist
-dist:
+dist: gen
 	@PATH=$(DEP_BIN_PATH):$$PATH gox \
 		-ldflags="$(GO_LDFLAGS)" \
 		-os="$(XC_OS)" \
