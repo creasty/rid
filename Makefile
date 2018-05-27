@@ -10,7 +10,7 @@ REVISION := $(shell git rev-parse --short HEAD)
 REPO := github.com/creasty/rid
 
 PACKAGE_DIRS := $(shell go list ./... 2> /dev/null | grep -v /vendor/)
-SRC_FILES := $(shell git ls-files --cached --others --exclude-standard | grep -E "\.go$$")
+SRC_FILES := $(shell find . -name '*.go' -not -path './vendor/*' -not -path './tmp/*')
 
 CMD_DIR := ./cmd
 BIN_DIR := ./bin
