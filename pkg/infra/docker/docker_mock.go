@@ -68,3 +68,32 @@ func (_m *MockDocker) FindContainer(projectName string, service string, num int)
 func (_mr *MockDockerMockRecorder) FindContainer(arg0, arg1, arg2 interface{}) *gomock.Call {
 	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "FindContainer", reflect.TypeOf((*MockDocker)(nil).FindContainer), arg0, arg1, arg2)
 }
+
+// Prepare mocks base method
+func (_m *MockDocker) Prepare() error {
+	ret := _m.ctrl.Call(_m, "Prepare")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Prepare indicates an expected call of Prepare
+func (_mr *MockDockerMockRecorder) Prepare() *gomock.Call {
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Prepare", reflect.TypeOf((*MockDocker)(nil).Prepare))
+}
+
+// Exec mocks base method
+func (_m *MockDocker) Exec(cid string, envs []string, name string, args ...string) error {
+	_s := []interface{}{cid, envs, name}
+	for _, _x := range args {
+		_s = append(_s, _x)
+	}
+	ret := _m.ctrl.Call(_m, "Exec", _s...)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Exec indicates an expected call of Exec
+func (_mr *MockDockerMockRecorder) Exec(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+	_s := append([]interface{}{arg0, arg1, arg2}, arg3...)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Exec", reflect.TypeOf((*MockDocker)(nil).Exec), _s...)
+}

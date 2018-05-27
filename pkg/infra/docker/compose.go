@@ -14,3 +14,23 @@ func (d *docker) GetDockerComposeVersion() (string, error) {
 	}
 	return strings.TrimRight(string(data[:]), "\n"), nil
 }
+
+func (d *docker) Prepare() error {
+	return d.run("docker-compose", "up", "-d", "--remove-orphans")
+}
+
+func (d *docker) Exec(cid string, envs []string, name string, args ...string) error {
+	dockerArgs := []string{"exec", "-it"}
+	{
+		for _, e := range envs {
+			dockerArgs = append(dockerArgs, "-e", e)
+		}
+
+		dockerArgs = append(dockerArgs, cid)
+	}
+
+	args = append([]string{name}, args...)
+	args = append(dockerArgs, args...)
+
+	return d.run("docker", args...)
+}

@@ -2,22 +2,50 @@
 
 package docker
 
+import (
+	"io"
+)
+
 // Docker is an interface for communicating with docker
 type Docker interface {
-	// GetDockerComposeVersion returns a version of docker-compose
+	// GetDockerComposeVersion returns a version of docker-compose.
 	GetDockerComposeVersion() (string, error)
 
-	// NormalizeProjectName normalizes a project name
+	// NormalizeProjectName normalizes a project name.
 	NormalizeProjectName(str string) string
 
-	// FindContainerByService returns a container ID for service
+	// FindContainerByService returns a container ID for service.
 	FindContainer(projectName, service string, num int) (string, error)
+
+	// Prepare starts up containers as deamon.
+	Prepare() error
+
+	// Exec executes the given command in the specified container ID.
+	// Extra environment variables can be passed in.
+	Exec(cid string, envs []string, name string, args ...string) error
 }
 
 // New creates an instance of Docker
-func New() Docker {
-	return &docker{}
+func New(
+	stdin io.Reader,
+	stdout io.Writer,
+	stderr io.Writer,
+	rootDir string,
+	ridDir string,
+) Docker {
+	return &docker{
+		Stdin:   stdin,
+		Stdout:  stdout,
+		Stderr:  stderr,
+		rootDir: rootDir,
+		ridDir:  ridDir,
+	}
 }
 
 type docker struct {
+	Stdin   io.Reader
+	Stdout  io.Writer
+	Stderr  io.Writer
+	rootDir string
+	ridDir  string
 }
