@@ -1,6 +1,6 @@
 package model
 
-// Config
+// Config holds information of the current project
 type Config struct {
 	// ProjectName is used for docker-compose in order to distinguish projects in other locations.
 	ProjectName string
